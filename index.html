@@ -1,200 +1,379 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="antialiased">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Souco Business Manager</title>
-<style>
-:root{--a:#f4b942;--bg:#f6f7f9;--card:#fff;--tx:#191714;--mu:#73767d;--ln:#e5e7eb;--ok:#237a51;--bad:#b83232}
-*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,Segoe UI,Arial;background:var(--bg);color:var(--tx)}body.dark{--bg:#11120f;--card:#1b1c18;--tx:#f7f5ee;--mu:#aaa;--ln:#30312d}
-button,input,select,textarea{font:inherit}.app{display:grid;grid-template-columns:240px 1fr;min-height:100vh}aside{background:#191714;color:white;padding:20px 14px}main{padding:26px;min-width:0}
-.brand{display:flex;gap:10px;align-items:center;margin:0 8px 20px}.logo{width:40px;height:40px;border-radius:12px;background:var(--a);color:#191714;display:grid;place-items:center;font-weight:900}.brand small{display:block;color:#aaa}
-nav button{width:100%;text-align:left;border:0;background:transparent;color:#c9c9c4;padding:10px 12px;border-radius:9px;margin:2px 0;cursor:pointer}nav button:hover,nav button.on{background:#2b2a26;color:white}
-.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:20px}.top h1{margin:0}.top p{margin:3px 0;color:var(--mu)}.btn{border:0;border-radius:9px;padding:10px 13px;background:var(--a);font-weight:700;cursor:pointer}.btn.sec{background:var(--card);color:var(--tx);border:1px solid var(--ln)}.btn.del{background:#ffe8e8;color:var(--bad)}
-.view{display:none}.view.on{display:block}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}.two{display:grid;grid-template-columns:1.4fr 1fr;gap:13px}.card{background:var(--card);border:1px solid var(--ln);border-radius:15px;padding:17px}.section{margin-top:15px}.metric small,.hint,label{color:var(--mu)}.metric strong{display:block;font-size:25px;margin-top:7px}.toolbar{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:12px;flex-wrap:wrap}.toolbar h2,.card h2{margin:0 0 5px;font-size:17px}
-table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--ln)}th{color:var(--mu)}.wrap{overflow:auto}.badge{display:inline-block;border-radius:20px;padding:4px 8px;background:#eee;font-size:12px}.ok{background:#e1f5e9;color:#176a46}.warn{background:#fff0c8;color:#806000}.bad{background:#ffe1e1;color:#9f2828}
-input,select,textarea{width:100%;border:1px solid var(--ln);background:var(--card);color:var(--tx);border-radius:9px;padding:10px}textarea{min-height:80px}label{font-size:12px;display:block;margin-bottom:4px}.fg{display:grid;grid-template-columns:1fr 1fr;gap:11px}.full{grid-column:1/-1}.actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}.empty{text-align:center;color:var(--mu);padding:25px}.alert{border:1px solid var(--ln);border-radius:11px;padding:11px;margin:8px 0}.alert b{display:block}.bar{height:8px;background:var(--ln);border-radius:8px;overflow:hidden;margin-top:5px}.bar i{display:block;height:100%;background:var(--a)}.barrow{margin:12px 0}.barrow>div:first-child{display:flex;justify-content:space-between;font-size:13px}
-dialog{border:0;border-radius:17px;padding:0;background:var(--card);color:var(--tx);width:min(650px,94vw);box-shadow:0 25px 70px #0005}dialog::backdrop{background:#0007}.modal{padding:21px}.mh{display:flex;justify-content:space-between;align-items:center}.mh button{border:0;background:none;color:var(--mu);font-size:24px;cursor:pointer}
-.flex{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-@media(max-width:950px){.grid{grid-template-columns:1fr 1fr}.two{grid-template-columns:1fr}}
-@media(max-width:700px){.app{grid-template-columns:1fr}aside{padding:11px}nav{display:flex;overflow:auto}.brand{margin-bottom:8px}nav button{width:auto;white-space:nowrap}main{padding:15px}.fg{grid-template-columns:1fr}.full{grid-column:auto}}
-@media(max-width:430px){.grid{grid-template-columns:1fr}}
 
-.analytics-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-top:13px}
-.metric .delta{display:block;font-size:12px;margin-top:6px;color:var(--mu)}
-.dashboard-controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 13px}
-.dashboard-controls select{width:auto;min-width:160px}
-.chartbox{height:260px;display:flex;align-items:flex-end;gap:7px;padding-top:18px;overflow-x:auto}
-.chartcol{min-width:34px;flex:1;text-align:center}
-.chartbar{width:100%;min-height:2px;background:var(--a);border-radius:7px 7px 2px 2px;position:relative}
-.chartbar:hover:after{content:attr(data-tip);position:absolute;bottom:calc(100% + 7px);left:50%;transform:translateX(-50%);background:var(--tx);color:var(--card);padding:5px 7px;border-radius:6px;font-size:11px;white-space:nowrap;z-index:4}
-.chartlabel{font-size:10px;color:var(--mu);margin-top:6px;white-space:nowrap}
-.donutwrap{display:flex;align-items:center;gap:20px;min-height:220px}
-.donut{width:155px;height:155px;border-radius:50%;position:relative;flex:0 0 auto}
-.donut:after{content:'';position:absolute;inset:28px;background:var(--card);border-radius:50%}
-.legend{flex:1}.legend div{display:flex;justify-content:space-between;gap:10px;margin:9px 0;font-size:13px}
-@media(max-width:950px){.analytics-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:520px){.analytics-grid{grid-template-columns:1fr}.donutwrap{flex-direction:column}}
-
-
-/* ===== Mobile-first enhancements ===== */
-.mobile-topbar{display:none}
-@media(max-width:700px){
-  body{overflow-x:hidden}
-  .app{display:block;min-height:100vh;padding-bottom:78px}
-  aside{
-    position:fixed;left:0;right:0;bottom:0;top:auto;z-index:50;
-    padding:7px 8px max(7px,env(safe-area-inset-bottom));
-    background:#191714;border-top:1px solid #34312c;
-  }
-  aside .brand{display:none}
-  nav{
-    display:flex;gap:3px;overflow-x:auto;scrollbar-width:none;
-    -webkit-overflow-scrolling:touch;
-  }
-  nav::-webkit-scrollbar{display:none}
-  nav button{
-    min-width:74px;width:auto;flex:0 0 auto;text-align:center;
-    padding:9px 8px;font-size:11px;border-radius:10px;
-  }
-  main{padding:14px 12px 22px}
-  .top{align-items:flex-start;margin-bottom:14px}
-  .top h1{font-size:23px}
-  .top p{font-size:12px}
-  .top .flex{gap:5px}
-  .top .btn{padding:9px 10px;font-size:12px}
-  .dashboard-controls{position:sticky;top:0;z-index:10;background:var(--bg);padding:5px 0 10px}
-  .dashboard-controls select{width:100%;min-width:0}
-  #periodLabel{width:100%;font-size:11px}
-  .grid,.analytics-grid{grid-template-columns:1fr 1fr;gap:8px}
-  .card{padding:13px;border-radius:13px}
-  .metric strong{font-size:20px}
-  .metric small{font-size:11px}
-  .two{grid-template-columns:1fr;gap:9px}
-  .section{margin-top:9px}
-  .chartbox{height:220px;gap:5px}
-  .chartcol{min-width:27px}
-  .chartlabel{font-size:9px}
-  .donutwrap{min-height:190px}
-  .donut{width:125px;height:125px}
-  .donut:after{inset:23px}
-  .legend div{font-size:12px}
-  .toolbar{align-items:flex-start}
-  .toolbar .btn{width:100%}
-  .wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
-  table{min-width:650px;font-size:12px}
-  th,td{padding:9px 7px}
-  dialog{width:calc(100vw - 20px);max-height:90vh;overflow:auto;border-radius:15px}
-  .modal{padding:16px}
-  .fg{grid-template-columns:1fr}
-  .full{grid-column:auto}
-  input,select,textarea{font-size:16px} /* prevents iOS zoom */
-  .actions{position:sticky;bottom:0;background:var(--card);padding-top:10px}
-  .actions .btn{flex:1}
-}
-@media(max-width:430px){
-  .grid,.analytics-grid{grid-template-columns:1fr 1fr}
-  .top{display:block}
-  .top .flex{margin-top:10px}
-  .top .flex .btn{flex:1}
-  .card h2{font-size:15px}
-  .metric strong{font-size:18px}
-}
-@media(max-width:350px){
-  .grid,.analytics-grid{grid-template-columns:1fr}
-}
-
-
-/* SOUCO V5 RESPONSIVE REDESIGN */
-:root{--bg:#f6f4ef;--card:#fff;--tx:#171713;--mu:#77746c;--bd:#e7e2d8;--a:#f5b52f;--ad:#d99608;--soft:#fff7e4;--shadow:0 10px 35px rgba(28,24,17,.07)}
-body{background:var(--bg)}.app{grid-template-columns:250px minmax(0,1fr)}
-aside{background:#151513;color:#fff;padding:24px 16px;border:0;box-shadow:8px 0 30px rgba(0,0,0,.05)}
-.brand{padding:0 8px 24px;border-bottom:1px solid #2b2a27;margin-bottom:16px}.brand small{color:#aaa69e}
-.brand .logo{width:44px;height:44px;border-radius:14px;background:var(--a);color:#171713;display:grid;place-items:center;font-weight:900}
-nav{display:grid;gap:5px}nav button{position:relative;border-radius:12px;padding:11px 12px;color:#aaa69e;font-weight:650;transition:.18s}
-nav button:hover{background:#23221f;color:#fff;transform:translateX(2px)}nav button.on{background:#2a2823;color:#fff}
-nav button.on:before{content:"";position:absolute;left:0;top:10px;bottom:10px;width:3px;border-radius:99px;background:var(--a)}
-main{max-width:1500px;width:100%;padding:30px clamp(20px,3vw,46px) 50px}.top{margin-bottom:24px}.top h1{font-size:clamp(26px,3vw,36px);letter-spacing:-1.2px}
-.card{border:1px solid var(--bd);border-radius:18px;padding:19px;box-shadow:var(--shadow);background:#fff}
-.metric{min-height:112px;display:flex;flex-direction:column;justify-content:center}.metric small{text-transform:uppercase;letter-spacing:.65px;font-size:10px;font-weight:800}.metric strong{font-size:clamp(23px,2.2vw,31px);letter-spacing:-.8px;margin-top:5px}
-.grid,.analytics-grid,.two{gap:12px}.section{margin-top:12px}.btn{border-radius:11px;padding:10px 14px;font-weight:750;transition:.15s}.btn:hover{transform:translateY(-1px);box-shadow:0 7px 20px rgba(0,0,0,.07)}
-.btn.pri{background:#171713;color:#fff;border-color:#171713}.btn.sec{background:#fff}input,select,textarea{border-radius:11px;background:#fff;padding:11px 12px}
-.dashboard-controls{background:#ebe7de;border:1px solid #dfd9cd;border-radius:14px;padding:8px;display:flex;align-items:center;margin-bottom:12px}.dashboard-controls select{background:#fff;border:0}#syncState{margin-left:auto}
-.wrap{border-radius:12px;border:1px solid var(--bd)}thead{background:#f4f1eb}tbody tr:hover{background:#fffbf2}.bar{height:9px}.fill{background:linear-gradient(90deg,var(--a),#ffd36e)}
-dialog{border:0;border-radius:20px;box-shadow:0 30px 90px rgba(0,0,0,.22)}dialog::backdrop{background:rgba(20,18,14,.48);backdrop-filter:blur(4px)}
-.mobile-more,.mobile-menu{display:none}
-@media(max-width:1050px) and (min-width:721px){.app{grid-template-columns:205px minmax(0,1fr)}aside{padding:20px 10px}main{padding:24px 20px 40px}.grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:720px){
- body{overflow-x:hidden}.app{display:block;padding-bottom:calc(83px + env(safe-area-inset-bottom))}
- aside{position:fixed;z-index:100;left:0;right:0;bottom:0;top:auto;height:auto;padding:7px 8px calc(7px + env(safe-area-inset-bottom));background:rgba(20,20,18,.97);border-top:1px solid rgba(255,255,255,.08);box-shadow:0 -10px 35px rgba(0,0,0,.16);backdrop-filter:blur(18px)}
- aside .brand{display:none}nav{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;overflow:visible}
- nav button{min-width:0;width:100%;height:55px;padding:6px 2px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:9px;line-height:1.15;color:#aaa69e;border-radius:12px;white-space:normal;overflow:hidden}
- nav button:hover{transform:none}nav button.on{background:#302d27;color:#fff}nav button.on:before{left:50%;top:3px;bottom:auto;width:18px;height:3px;transform:translateX(-50%)}nav button:nth-child(n+6){display:none}
- main{padding:18px 13px 24px;max-width:none}.top{display:flex;align-items:flex-start;margin-bottom:17px}.top h1{font-size:25px;line-height:1.05}.top p{font-size:11px;max-width:230px}.top .flex{margin-left:auto;display:grid;gap:5px}.top .btn{font-size:10px;padding:8px 9px;white-space:nowrap}
- .dashboard-controls{position:relative;display:grid;grid-template-columns:1fr auto;gap:7px;padding:7px}.dashboard-controls select{width:100%;min-width:0;font-size:14px}.dashboard-controls .btn{width:auto;font-size:11px;padding:9px 10px}#syncState,#periodLabel{grid-column:1/-1;margin:0;font-size:10px;padding:0 3px}
- .grid,.analytics-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.card{padding:13px;border-radius:15px;box-shadow:0 6px 22px rgba(28,24,17,.05)}.metric{min-height:91px}.metric strong{font-size:19px}.metric small{font-size:9px}.two{grid-template-columns:1fr;gap:8px}.section{margin-top:8px}.card h2{font-size:15px}
- .chartbox{height:205px}.donut{width:112px;height:112px}.donut:after{inset:21px}.legend div{font-size:11px}
- .toolbar{display:grid;grid-template-columns:1fr;gap:8px}.toolbar .btn{width:100%}.wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}table{min-width:620px;font-size:11px}th,td{padding:9px 7px}
- dialog{width:calc(100vw - 18px);max-height:88dvh}.modal{padding:16px}.fg{grid-template-columns:1fr}.full{grid-column:auto}input,select,textarea{font-size:16px}.actions{position:sticky;bottom:-16px;background:var(--card);padding:12px 0 4px}.actions .btn{flex:1}
- .mobile-more{display:flex;position:fixed;z-index:110;right:12px;bottom:calc(73px + env(safe-area-inset-bottom));width:43px;height:43px;border-radius:50%;border:1px solid #ded7ca;background:#fff;color:#171713;align-items:center;justify-content:center;box-shadow:0 8px 25px rgba(0,0,0,.16);font-size:20px;font-weight:900}
- .mobile-menu{position:fixed;z-index:109;left:12px;right:12px;bottom:calc(126px + env(safe-area-inset-bottom));background:#fff;border:1px solid var(--bd);border-radius:18px;padding:10px;box-shadow:0 25px 70px rgba(0,0,0,.22)}
- .mobile-menu.open{display:grid;grid-template-columns:1fr 1fr;gap:7px}.mobile-menu button{border:1px solid var(--bd);background:#faf9f6;border-radius:12px;padding:12px 9px;text-align:left;font-weight:700;font-size:12px}
-}
-
-</style>
-</head><body>
-<div class="app"><aside><div class="brand"><div class="logo" id="li">S</div><div><b id="bn">Souco Coffee</b><small>Business Manager</small></div></div><nav id="nav"></nav></aside>
-<main><div class="top"><div><h1 id="pt">Dashboard</h1><p id="ps">Your business at a glance.</p></div><div class="flex"><button class="btn sec" onclick="theme()">◐ Theme</button><button class="btn" onclick="orderForm()">+ New Order</button></div></div>
-
-<section id="dashboard" class="view on">
-<div class="dashboard-controls">
-  <select id="dashPeriod" onchange="renderDashboardAnalytics()">
-    <option value="thisMonth">This Month</option>
-    <option value="lastMonth">Last Month</option>
-    <option value="last30">Last 30 Days</option>
-    <option value="thisYear">This Year</option>
-    <option value="allTime">All Time</option>
-  </select>
-  <button class="btn sec" type="button" onclick="syncOrdersFromGoogleSheets()">↻ Sync Sales</button>
-  <span class="hint" id="syncState">Not synced</span>
-  <span class="hint" id="periodLabel"></span>
-</div>
-<div id="metrics" class="grid"></div>
-<div id="periodMetrics" class="analytics-grid"></div>
-<div class="two section">
-  <div class="card"><h2>Sales Trend</h2><p class="hint" id="trendHint"></p><div id="salesTrend" class="chartbox"></div></div>
-  <div class="card"><h2>Product Mix</h2><p class="hint">Units sold for selected period.</p><div id="productMix"></div></div>
-</div>
-<div class="two section">
-  <div class="card"><h2>Product Performance</h2><div id="bars"></div></div>
-  <div class="card"><h2>Business Health</h2><div id="health"></div></div>
-</div>
-<div class="two section">
-  <div class="card"><h2>Recent Orders</h2><div class="wrap"><table><thead><tr><th>Date</th><th>Customer</th><th>Product</th><th>Total</th></tr></thead><tbody id="recent"></tbody></table></div></div>
-  <div class="card"><h2>Compliance Attention</h2><div id="alerts"></div></div>
-</div>
-</section>
-
-<section id="orders" class="view"><div class="card"><div class="toolbar"><div><h2>Orders</h2><span class="hint">Sales and fulfilment.</span></div><button class="btn" onclick="orderForm()">+ Add Order</button></div><div class="wrap"><table><thead><tr><th>Date</th><th>Customer</th><th>Product</th><th>Qty</th><th>Total</th><th>Status</th><th></th></tr></thead><tbody id="ot"></tbody></table></div></div></section>
-<section id="products" class="view"><div class="card"><div class="toolbar"><div><h2>Products & Costing</h2><span class="hint">Ingredient + packaging direct cost.</span></div><button class="btn" onclick="productForm()">+ Product</button></div><div class="wrap"><table><thead><tr><th>Product</th><th>Price</th><th>Cost</th><th>Gross Profit</th><th>Margin</th><th></th></tr></thead><tbody id="prt"></tbody></table></div></div></section>
-<section id="inventory" class="view"><div class="card"><div class="toolbar"><div><h2>Inventory</h2><span class="hint">Ingredients and packaging.</span></div><button class="btn" onclick="inventoryForm()">+ Item</button></div><div class="wrap"><table><thead><tr><th>Item</th><th>Category</th><th>Stock</th><th>Reorder</th><th>Cost/Unit</th><th>Status</th><th></th></tr></thead><tbody id="it"></tbody></table></div></div></section>
-<section id="expenses" class="view"><div class="card"><div class="toolbar"><div><h2>Expenses</h2></div><button class="btn" onclick="expenseForm()">+ Expense</button></div><div class="wrap"><table><thead><tr><th>Date</th><th>Category</th><th>Description</th><th>Amount</th><th></th></tr></thead><tbody id="et"></tbody></table></div></div></section>
-<section id="wastage" class="view"><div class="card"><div class="toolbar"><div><h2>Wastage</h2></div><button class="btn" onclick="wasteForm()">+ Wastage</button></div><div class="wrap"><table><thead><tr><th>Date</th><th>Item</th><th>Reason</th><th>Loss</th><th></th></tr></thead><tbody id="wt"></tbody></table></div></div></section>
-<section id="equipment" class="view"><div class="card"><div class="toolbar"><div><h2>Equipment</h2><span class="hint">Capital purchases tracked separately.</span></div><button class="btn" onclick="equipmentForm()">+ Equipment</button></div><div class="wrap"><table><thead><tr><th>Name</th><th>Date</th><th>Cost</th><th>Warranty</th><th></th></tr></thead><tbody id="eqt"></tbody></table></div></div></section>
-<section id="compliance" class="view"><div class="card"><div class="toolbar"><div><h2>Malaysia Compliance Tracker</h2><span class="hint">Record-management aid only. Verify current requirements with relevant authorities.</span></div><button class="btn" onclick="complianceForm()">+ Record</button></div><div id="cc" class="grid"></div></div><div class="card section"><h2>Suggested checklist</h2><div id="check"></div></div></section>
-<section id="documents" class="view"><div class="card"><div class="toolbar"><div><h2>Document Vault</h2><span class="hint">Files stay in this browser. Keep external backups.</span></div><button class="btn" onclick="documentForm()">+ Document</button></div><div class="wrap"><table><thead><tr><th>Title</th><th>Category</th><th>Issue</th><th>Expiry</th><th>File</th><th></th></tr></thead><tbody id="dt"></tbody></table></div></div></section>
-<section id="brand" class="view"><div class="two"><div class="card"><h2>Brand Evidence Timeline</h2><p class="hint">Evidence of brand history; not a substitute for trademark registration.</p><div id="ev"></div><button class="btn" onclick="evidenceForm()">+ Evidence</button></div><div class="card"><h2>Trademark</h2><div id="tm"></div><button class="btn sec" onclick="complianceForm('MyIPO Trademark')">Update Trademark</button></div></div></section>
-<section id="reports" class="view"><div id="rm" class="grid"></div><div class="card section"><h2>Exports & Backup</h2><p class="hint">Download backups regularly.</p><div class="flex"><button class="btn" onclick="csv('orders')">Orders CSV</button><button class="btn sec" onclick="csv('expenses')">Expenses CSV</button><button class="btn sec" onclick="backup()">Full Backup</button><label class="btn sec">Restore<input type="file" accept=".json" hidden onchange="restore(this)"></label></div></div></section>
-<section id="settings" class="view"><div class="card"><h2>Business Profile</h2><form id="sf" class="fg" onsubmit="saveSettings(event)"><div><label>Business Name</label><input name="name" required></div><div><label>Owner</label><input name="owner"></div><div><label>Tagline</label><input name="tagline"></div><div><label>WhatsApp</label><input name="phone"></div><div><label>Email</label><input name="email"></div><div><label>Operating Area</label><input name="area"></div><div><label>SSM Number</label><input name="ssm"></div><div><label>Start Date</label><input name="start" type="date"></div><div><label>Stage</label><select name="student"><option>Student</option><option>Graduate / Standard Business</option></select></div><div><label>University</label><input name="university"></div><div><label>Brand Color</label><input name="color" type="color"></div><div><label>Currency</label><select name="currency"><option value="RM">MYR (RM)</option></select></div><div class="full"><label>Description</label><textarea name="description"></textarea></div><div class="full actions"><button class="btn">Save</button></div></form></div><div class="card section"><h2>Data</h2><div class="flex"><button class="btn sec" onclick="backup()">Download Backup</button><button class="btn del" onclick="resetApp()">Reset All Data</button></div></div></section>
-</main></div>
-
-<dialog id="modal"><div class="modal"><div class="mh"><h2 id="mt"></h2><button onclick="modal.close()">×</button></div><form id="mf"></form></div></dialog>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@phosphor-icons/web"></script>
+<script src="https://cdn.tailwindcss.com"></script>
 
 <script>
-/* GOOGLE SHEETS CLOUD SALES DATABASE
-   Paste your Apps Script Web App URL ending in /exec here. */
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        fontFamily: { sans: ['Inter', 'sans-serif'] },
+        colors: {
+          brand: '#f4b942', // Original accent color
+          brandDark: '#d49b22',
+        },
+        animation: { 'fade-in': 'fadeIn 0.2s ease-out' },
+        keyframes: { fadeIn: { '0%': { opacity: '0', transform: 'translateY(5px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } } }
+      }
+    }
+  }
+</script>
+
+<style>
+  /* Base custom styles for complex UI parts */
+  :root { --a: #f4b942; }
+  
+  /* Hide scrollbar for nav but allow scroll */
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  
+  /* View toggling */
+  .view { display: none; }
+  .view.on { display: block; animation: fadeIn 0.3s ease-out; }
+  
+  /* Modal styling overlaying Tailwind */
+  dialog { margin: auto; padding: 0; background: transparent; max-width: 90vw; width: 600px; }
+  dialog::backdrop { background: rgba(9, 9, 11, 0.5); backdrop-filter: blur(4px); }
+  
+  /* Custom Chart Styles (Keeping structural classes for JS logic, styled modern) */
+  .chartbox { height: 240px; display: flex; align-items: flex-end; gap: 8px; padding-top: 24px; overflow-x: auto; padding-bottom: 8px; }
+  .chartcol { min-width: 40px; flex: 1; text-align: center; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; height: 100%; }
+  .chartbar { width: 100%; max-width: 48px; background: var(--a); border-radius: 6px 6px 2px 2px; position: relative; transition: all 0.2s; cursor: pointer; }
+  .chartbar:hover { filter: brightness(1.1); transform: scaleY(1.02); transform-origin: bottom; }
+  .chartbar:hover:after {
+    content: attr(data-tip); position: absolute; bottom: calc(100% + 10px); left: 50%; transform: translateX(-50%);
+    background: #18181b; color: #fff; padding: 6px 10px; border-radius: 8px; font-size: 12px; font-weight: 600; white-space: nowrap; z-index: 10;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); pointer-events: none;
+  }
+  .chartlabel { font-size: 11px; color: #71717a; margin-top: 8px; font-weight: 500; white-space: nowrap; }
+  
+  .donutwrap { display: flex; align-items: center; gap: 32px; flex-wrap: wrap; justify-content: center; padding: 16px 0; }
+  .donut { width: 160px; height: 160px; border-radius: 50%; position: relative; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
+  .donut:after { content: ''; position: absolute; inset: 35px; background: white; border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+  .dark .donut:after { background: #18181b; }
+  
+  .bar-row-custom { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+  .bar-row-custom > div:first-child { display: flex; justify-content: space-between; font-size: 14px; font-weight: 500; }
+  .bar-track { height: 10px; background: #f4f4f5; border-radius: 99px; overflow: hidden; }
+  .dark .bar-track { background: #27272a; }
+  .bar-fill { display: block; height: 100%; background: var(--a); border-radius: 99px; transition: width 0.5s ease-out; }
+
+.chartamount{font-size:10px;color:var(--mu);margin-top:3px;white-space:nowrap}
+@media(max-width:720px){.chartamount{font-size:8px}.chartlabel{white-space:nowrap}}
+</style>
+</head>
+
+<body class="bg-gray-50 dark:bg-zinc-950 text-gray-900 dark:text-gray-100 transition-colors duration-200">
+
+<div class="flex flex-col md:flex-row h-screen overflow-hidden">
+  
+  <!-- Sidebar / Bottom Nav -->
+  <aside class="fixed md:static bottom-0 left-0 right-0 z-50 w-full md:w-64 bg-white/90 md:bg-white dark:bg-zinc-900/90 md:dark:bg-zinc-900 backdrop-blur-md md:backdrop-blur-none border-t md:border-t-0 md:border-r border-gray-200 dark:border-zinc-800 md:flex flex-col flex-shrink-0 transition-colors duration-200">
+    <div class="hidden md:flex items-center gap-3 p-6 mb-2 border-b border-gray-100 dark:border-zinc-800">
+      <div id="li" class="w-10 h-10 rounded-xl bg-brand text-yellow-950 flex items-center justify-center font-black text-xl shadow-sm">S</div>
+      <div>
+        <b id="bn" class="block text-base tracking-tight leading-tight">Souco Coffee</b>
+        <small class="text-xs text-gray-500 dark:text-gray-400 font-medium">Business Manager</small>
+      </div>
+    </div>
+    <nav id="nav" class="flex md:flex-col flex-row gap-1 md:gap-2 p-2 md:p-4 overflow-x-auto no-scrollbar justify-around md:justify-start flex-1"></nav>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main class="flex-1 overflow-y-auto pb-24 md:pb-12 pt-6 md:pt-8 px-4 sm:px-6 md:px-10 scroll-smooth">
+    <div class="max-w-7xl mx-auto">
+      
+      <!-- Top Header -->
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+        <div>
+          <h1 id="pt" class="text-3xl md:text-4xl font-extrabold tracking-tight">Dashboard</h1>
+          <p id="ps" class="text-sm text-gray-500 dark:text-gray-400 mt-1 font-medium">Your business at a glance.</p>
+        </div>
+        <div class="flex gap-2 w-full sm:w-auto">
+          <button class="flex-1 sm:flex-none px-4 py-2.5 rounded-xl font-semibold transition-all active:scale-95 flex items-center justify-center gap-2 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-700 text-gray-700 dark:text-gray-300 shadow-sm text-sm" onclick="theme()">
+            <i class="ph ph-moon-stars text-lg"></i> Theme
+          </button>
+          <button class="flex-1 sm:flex-none px-4 py-2.5 rounded-xl font-semibold transition-all active:scale-95 flex items-center justify-center gap-2 bg-gray-900 text-white dark:bg-brand dark:text-yellow-950 hover:bg-gray-800 dark:hover:brightness-105 shadow-md text-sm" onclick="orderForm()">
+            <i class="ph ph-plus text-lg"></i> Order
+          </button>
+        </div>
+      </div>
+
+      <div id="views-container">
+        
+        <!-- DASHBOARD VIEW -->
+        <section id="dashboard" class="view on space-y-6">
+          <div class="bg-white dark:bg-zinc-900 p-3 rounded-2xl border border-gray-200 dark:border-zinc-800 shadow-sm flex flex-wrap items-center gap-3">
+            <select id="dashPeriod" onchange="renderDashboardAnalytics()" class="bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-2 focus:ring-brand outline-none px-3 py-2 min-w-[140px] font-medium">
+              <option value="thisMonth">This Month</option>
+              <option value="lastMonth">Last Month</option>
+              <option value="last30">Last 30 Days</option>
+              <option value="thisYear">This Year</option>
+              <option value="allTime">All Time</option>
+            </select>
+            <button class="px-3 py-2 rounded-lg font-semibold transition-all active:scale-95 flex items-center justify-center gap-1.5 bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700 text-gray-700 dark:text-gray-300 text-sm" type="button" onclick="syncOrdersFromGoogleSheets()">
+              <i class="ph ph-arrows-clockwise"></i> Sync
+            </button>
+            <span class="text-xs font-semibold px-2 py-1 bg-gray-100 dark:bg-zinc-800 rounded-md text-gray-500 dark:text-gray-400" id="syncState">Not synced</span>
+            <span class="text-xs font-medium text-gray-400 ml-auto hidden sm:block" id="periodLabel"></span>
+          </div>
+          
+          <div id="metrics" class="grid grid-cols-2 lg:grid-cols-4 gap-4"></div>
+          <div id="periodMetrics" class="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-2 border-t border-gray-200 dark:border-zinc-800 pt-6"></div>
+          
+          <div class="grid lg:grid-cols-5 gap-6">
+            <div class="lg:col-span-3 bg-white dark:bg-zinc-900 rounded-2xl p-6 border border-gray-200 dark:border-zinc-800 shadow-sm">
+              <h2 class="text-lg font-bold mb-1">Sales Trend</h2>
+              <p class="text-xs text-gray-500 dark:text-gray-400 mb-2" id="trendHint"></p>
+              <div id="salesTrend" class="chartbox"></div>
+            </div>
+            <div class="lg:col-span-2 bg-white dark:bg-zinc-900 rounded-2xl p-6 border border-gray-200 dark:border-zinc-800 shadow-sm flex flex-col">
+              <h2 class="text-lg font-bold mb-1">Product Mix</h2>
+              <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Units sold for selected period.</p>
+              <div id="productMix" class="flex-1 flex items-center justify-center"></div>
+            </div>
+          </div>
+          
+          <div class="grid lg:grid-cols-2 gap-6">
+            <div class="bg-white dark:bg-zinc-900 rounded-2xl p-6 border border-gray-200 dark:border-zinc-800 shadow-sm">
+              <h2 class="text-lg font-bold mb-4">Product Performance</h2>
+              <div id="bars" class="space-y-4"></div>
+            </div>
+            <div class="bg-white dark:bg-zinc-900 rounded-2xl p-6 border border-gray-200 dark:border-zinc-800 shadow-sm">
+              <h2 class="text-lg font-bold mb-4">Business Health</h2>
+              <div id="health" class="space-y-3"></div>
+            </div>
+          </div>
+          
+          <div class="grid lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2 bg-white dark:bg-zinc-900 rounded-2xl border border-gray-200 dark:border-zinc-800 shadow-sm overflow-hidden flex flex-col">
+              <div class="p-5 border-b border-gray-100 dark:border-zinc-800">
+                <h2 class="text-lg font-bold">Recent Orders</h2>
+              </div>
+              <div class="overflow-x-auto flex-1">
+                <table class="w-full text-sm text-left"><thead class="text-xs text-gray-500 bg-gray-50/50 dark:bg-zinc-800/50 uppercase"><tr><th class="px-5 py-3">Date</th><th class="px-5 py-3">Customer</th><th class="px-5 py-3">Product</th><th class="px-5 py-3">Total</th></tr></thead><tbody id="recent" class="divide-y divide-gray-100 dark:divide-zinc-800"></tbody></table>
+              </div>
+            </div>
+            <div class="bg-white dark:bg-zinc-900 rounded-2xl p-6 border border-gray-200 dark:border-zinc-800 shadow-sm">
+              <h2 class="text-lg font-bold mb-4">Compliance Check</h2>
+              <div id="alerts" class="space-y-3"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ORDERS -->
+        <section id="orders" class="view">
+          <div class="bg-white dark:bg-zinc-900 rounded-2xl border border-gray-200 dark:border-zinc-800 shadow-sm overflow-hidden">
+            <div class="p-5 sm:p-6 border-b border-gray-100 dark:border-zinc-800 flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+              <div><h2 class="text-xl font-bold">Orders List</h2><span class="text-sm text-gray-500">Sales and fulfilment.</span></div>
+              <button class="px-4 py-2 rounded-xl font-semibold transition-all active:scale-95 flex items-center justify-center gap-2 bg-gray-900 text-white dark:bg-brand dark:text-yellow-950 shadow-md text-sm" onclick="orderForm()"><i class="ph ph-plus"></i> Add Order</button>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm text-left"><thead class="text-xs text-gray-500 bg-gray-50/50 dark:bg-zinc-800/50 uppercase tracking-wider"><tr><th class="px-6 py-4">Date</th><th class="px-6 py-4">Customer</th><th class="px-6 py-4">Product</th><th class="px-6 py-4">Qty</th><th class="px-6 py-4">Total</th><th class="px-6 py-4">Status</th><th class="px-6 py-4"></th></tr></thead><tbody id="ot" class="divide-y divide-gray-100 dark:divide-zinc-800"></tbody></table>
+            </div>
+          </div>
+        </section>
+
+        <!-- PRODUCTS -->
+        <section id="products" class="view">
+          <div class="bg-white dark:bg-zinc-900 rounded-2xl border border-gray-200 dark:border-zinc-800 shadow-sm overflow-hidden">
+             <div class="p-5 sm:p-6 border-b border-gray-100 dark:border-zinc-800 flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+              <div><h2 class="text-xl font-bold">Products & Costing</h2><span class="text-sm text-gray-500">Ingredient + packaging direct cost.</span></div>
+              <button class="px-4 py-2 rounded-xl font-semibold transition-all active:scale-95 flex items-center justify-center gap-2 bg-gray-900 text-white dark:bg-brand dark:text-yellow-950 shadow-md text-sm" onclick="productForm()"><i class="ph ph-plus"></i> Add Product</button>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm text-left"><thead class="text-xs text-gray-500 bg-gray-50/50 dark:bg-zinc-800/50 uppercase tracking-wider"><tr><th class="px-6 py-4">Product</th><th class="px-6 py-4">Price</th><th class="px-6 py-4">Cost</th><th class="px-6 py-4">Gross Profit</th><th class="px-6 py-4">Margin</th><th class="px-6 py-4"></th></tr></thead><tbody id="prt" class="divide-y divide-gray-100 dark:divide-zinc-800"></tbody></table>
+            </div>
+          </div>
+        </section>
+
+        <!-- INVENTORY -->
+        <section id="inventory" class="view">
+          <div class="bg-white dark:bg-zinc-900 rounded-2xl border border-gray-200 dark:border-zinc-800 shadow-sm overflow-hidden">
+             <div class="p-5 sm:p-6 border-b border-gray-100 dark:border-zinc-800 flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+              <div><h2 class="text-xl font-bold">Inventory</h2><span class="text-sm text-gray-500">Ingredients and packaging.</span></div>
+              <button class="px-4 py-2 rounded-xl font-semibold transition-all active:scale-95 flex items-center justify-center gap-2 bg-gray-900 text-white dark:bg-brand dark:text-yellow-950 shadow-md text-sm" onclick="inventoryForm()"><i class="ph ph-plus"></i> Add Item</button>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm text-left"><thead class="text-xs text-gray-500 bg-gray-50/50 dark:bg-zinc-800/50 uppercase tracking-wider"><tr><th class="px-6 py-4">Item</th><th class="px-6 py-4">Category</th><th class="px-6 py-4">Stock</th><th class="px-6 py-4">Reorder</th><th class="px-6 py-4">Cost/Unit</th><th class="px-6 py-4">Status</th><th class="px-6 py-4"></th></tr></thead><tbody id="it" class="divide-y divide-gray-100 dark:divide-zinc-800"></tbody></table>
+            </div>
+          </div>
+        </section>
+
+        <!-- EXPENSES -->
+        <section id="expenses" class="view">
+           <div class="bg-white dark:bg-zinc-900 rounded-2xl border border-gray-200 dark:border-zinc-800 shadow-sm overflow-hidden">
+             <div class="p-5 sm:p-6 border-b border-gray-100 dark:border-zinc-800 flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+              <h2 class="text-xl font-bold">Expenses</h2>
+              <button class="px-4 py-2 rounded-xl font-semibold transition-all active:scale-95 flex items-center justify-center gap-2 bg-gray-900 text-white dark:bg-brand dark:text-yellow-950 shadow-md text-sm" onclick="expenseForm()"><i class="ph ph-plus"></i> Add Expense</button>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm text-left"><thead class="text-xs text-gray-500 bg-gray-50/50 dark:bg-zinc-800/50 uppercase tracking-wider"><tr><th class="px-6 py-4">Date</th><th class="px-6 py-4">Category</th><th class="px-6 py-4">Description</th><th class="px-6 py-4">Amount</th><th class="px-6 py-4"></th></tr></thead><tbody id="et" class="divide-y divide-gray-100 dark:divide-zinc-800"></tbody></table>
+            </div>
+          </div>
+        </section>
+
+        <!-- WASTAGE -->
+        <section id="wastage" class="view">
+           <div class="bg-white dark:bg-zinc-900 rounded-2xl border border-gray-200 dark:border-zinc-800 shadow-sm overflow-hidden">
+             <div class="p-5 sm:p-6 border-b border-gray-100 dark:border-zinc-800 flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+              <h2 class="text-xl font-bold">Wastage</h2>
+              <button class="px-4 py-2 rounded-xl font-semibold transition-all active:scale-95 flex items-center justify-center gap-2 bg-gray-900 text-white dark:bg-brand dark:text-yellow-950 shadow-md text-sm" onclick="wasteForm()"><i class="ph ph-plus"></i> Add Wastage</button>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm text-left"><thead class="text-xs text-gray-500 bg-gray-50/50 dark:bg-zinc-800/50 uppercase tracking-wider"><tr><th class="px-6 py-4">Date</th><th class="px-6 py-4">Item</th><th class="px-6 py-4">Reason</th><th class="px-6 py-4">Loss</th><th class="px-6 py-4"></th></tr></thead><tbody id="wt" class="divide-y divide-gray-100 dark:divide-zinc-800"></tbody></table>
+            </div>
+          </div>
+        </section>
+
+        <!-- EQUIPMENT -->
+        <section id="equipment" class="view">
+           <div class="bg-white dark:bg-zinc-900 rounded-2xl border border-gray-200 dark:border-zinc-800 shadow-sm overflow-hidden">
+             <div class="p-5 sm:p-6 border-b border-gray-100 dark:border-zinc-800 flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+              <div><h2 class="text-xl font-bold">Equipment</h2><span class="text-sm text-gray-500">Capital purchases tracked separately.</span></div>
+              <button class="px-4 py-2 rounded-xl font-semibold transition-all active:scale-95 flex items-center justify-center gap-2 bg-gray-900 text-white dark:bg-brand dark:text-yellow-950 shadow-md text-sm" onclick="equipmentForm()"><i class="ph ph-plus"></i> Add Equipment</button>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm text-left"><thead class="text-xs text-gray-500 bg-gray-50/50 dark:bg-zinc-800/50 uppercase tracking-wider"><tr><th class="px-6 py-4">Name</th><th class="px-6 py-4">Date</th><th class="px-6 py-4">Cost</th><th class="px-6 py-4">Warranty</th><th class="px-6 py-4"></th></tr></thead><tbody id="eqt" class="divide-y divide-gray-100 dark:divide-zinc-800"></tbody></table>
+            </div>
+          </div>
+        </section>
+
+        <!-- COMPLIANCE -->
+        <section id="compliance" class="view space-y-6">
+          <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+             <div><h2 class="text-2xl font-bold">Malaysia Compliance Tracker</h2><span class="text-sm text-gray-500">Record-management aid only.</span></div>
+             <button class="px-4 py-2 rounded-xl font-semibold transition-all active:scale-95 flex items-center justify-center gap-2 bg-gray-900 text-white dark:bg-brand dark:text-yellow-950 shadow-md text-sm w-full sm:w-auto" onclick="complianceForm()"><i class="ph ph-plus"></i> Add Record</button>
+          </div>
+          <div id="cc" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
+          <div class="bg-white dark:bg-zinc-900 rounded-2xl p-6 border border-gray-200 dark:border-zinc-800 shadow-sm mt-6">
+            <h2 class="text-lg font-bold mb-4">Suggested Checklist</h2>
+            <div id="check" class="grid sm:grid-cols-2 gap-4"></div>
+          </div>
+        </section>
+
+        <!-- DOCUMENTS -->
+        <section id="documents" class="view">
+           <div class="bg-white dark:bg-zinc-900 rounded-2xl border border-gray-200 dark:border-zinc-800 shadow-sm overflow-hidden">
+             <div class="p-5 sm:p-6 border-b border-gray-100 dark:border-zinc-800 flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+              <div><h2 class="text-xl font-bold">Document Vault</h2><span class="text-sm text-gray-500">Files stay in this browser.</span></div>
+              <button class="px-4 py-2 rounded-xl font-semibold transition-all active:scale-95 flex items-center justify-center gap-2 bg-gray-900 text-white dark:bg-brand dark:text-yellow-950 shadow-md text-sm" onclick="documentForm()"><i class="ph ph-plus"></i> Upload</button>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm text-left"><thead class="text-xs text-gray-500 bg-gray-50/50 dark:bg-zinc-800/50 uppercase tracking-wider"><tr><th class="px-6 py-4">Title</th><th class="px-6 py-4">Category</th><th class="px-6 py-4">Issue</th><th class="px-6 py-4">Expiry</th><th class="px-6 py-4">File</th><th class="px-6 py-4"></th></tr></thead><tbody id="dt" class="divide-y divide-gray-100 dark:divide-zinc-800"></tbody></table>
+            </div>
+          </div>
+        </section>
+
+        <!-- BRAND -->
+        <section id="brand" class="view space-y-6">
+          <div class="grid lg:grid-cols-2 gap-6">
+            <div class="bg-white dark:bg-zinc-900 rounded-2xl p-6 border border-gray-200 dark:border-zinc-800 shadow-sm flex flex-col">
+              <div class="flex justify-between items-center mb-4">
+                <div><h2 class="text-xl font-bold">Evidence Timeline</h2><p class="text-sm text-gray-500">History of brand usage.</p></div>
+                <button class="px-3 py-1.5 rounded-lg font-semibold transition-all active:scale-95 bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700 text-gray-700 dark:text-gray-300 text-xs flex items-center gap-1" onclick="evidenceForm()"><i class="ph ph-plus"></i> Add</button>
+              </div>
+              <div id="ev" class="space-y-3 flex-1"></div>
+            </div>
+            <div class="bg-white dark:bg-zinc-900 rounded-2xl p-6 border border-gray-200 dark:border-zinc-800 shadow-sm flex flex-col">
+               <h2 class="text-xl font-bold mb-4">Trademark Status</h2>
+               <div id="tm" class="space-y-3 text-sm flex-1 bg-gray-50 dark:bg-zinc-800/50 p-4 rounded-xl border border-gray-100 dark:border-zinc-800"></div>
+               <button class="mt-4 px-4 py-2 w-full rounded-xl font-semibold transition-all active:scale-95 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-700 text-gray-700 dark:text-gray-300 text-sm" onclick="complianceForm('MyIPO Trademark')">Update Trademark Info</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- REPORTS -->
+        <section id="reports" class="view space-y-6">
+          <div id="rm" class="grid grid-cols-2 lg:grid-cols-4 gap-4"></div>
+          <div class="bg-white dark:bg-zinc-900 rounded-2xl p-6 border border-gray-200 dark:border-zinc-800 shadow-sm">
+            <h2 class="text-xl font-bold mb-1">Exports & Backup</h2>
+            <p class="text-sm text-gray-500 mb-6">Download backups regularly to prevent data loss.</p>
+            <div class="flex flex-wrap gap-3">
+              <button class="px-4 py-2 rounded-xl font-semibold transition-all active:scale-95 flex items-center gap-2 bg-gray-900 text-white dark:bg-brand dark:text-yellow-950 text-sm" onclick="csv('orders')"><i class="ph ph-download-simple"></i> Orders CSV</button>
+              <button class="px-4 py-2 rounded-xl font-semibold transition-all active:scale-95 flex items-center gap-2 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-700 text-gray-700 dark:text-gray-300 text-sm" onclick="csv('expenses')"><i class="ph ph-download-simple"></i> Expenses CSV</button>
+              <button class="px-4 py-2 rounded-xl font-semibold transition-all active:scale-95 flex items-center gap-2 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-700 text-gray-700 dark:text-gray-300 text-sm" onclick="backup()"><i class="ph ph-database"></i> Full Backup</button>
+              <label class="px-4 py-2 rounded-xl font-semibold transition-all active:scale-95 flex items-center gap-2 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-700 text-gray-700 dark:text-gray-300 text-sm cursor-pointer">
+                <i class="ph ph-upload-simple"></i> Restore<input type="file" accept=".json" class="hidden" onchange="restore(this)">
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <!-- SETTINGS -->
+        <section id="settings" class="view space-y-6">
+          <div class="bg-white dark:bg-zinc-900 rounded-2xl p-6 border border-gray-200 dark:border-zinc-800 shadow-sm">
+            <h2 class="text-xl font-bold mb-6">Business Profile</h2>
+            <form id="sf" class="grid grid-cols-1 md:grid-cols-2 gap-5" onsubmit="saveSettings(event)">
+              <!-- Inputs mapped dynamically via JS class constants -->
+            </form>
+          </div>
+          <div class="bg-red-50 dark:bg-red-900/10 rounded-2xl p-6 border border-red-100 dark:border-red-900/30">
+            <h2 class="text-lg font-bold text-red-800 dark:text-red-400 mb-4">Danger Zone</h2>
+            <button class="px-4 py-2 rounded-xl font-semibold transition-all active:scale-95 flex items-center gap-2 bg-white dark:bg-zinc-800 border border-red-200 dark:border-red-800/50 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 text-sm" onclick="resetApp()"><i class="ph ph-warning-circle"></i> Reset All Data</button>
+          </div>
+        </section>
+        
+      </div>
+    </div>
+  </main>
+</div>
+
+<dialog id="modal" class="rounded-2xl border border-gray-200 dark:border-zinc-800 shadow-2xl bg-white dark:bg-zinc-900 text-gray-900 dark:text-white transition-all overflow-hidden">
+  <div class="p-6">
+    <div class="flex justify-between items-center mb-6">
+      <h2 id="mt" class="text-2xl font-bold tracking-tight"></h2>
+      <button type="button" onclick="modal.close()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors text-gray-500">
+        <i class="ph ph-x text-lg"></i>
+      </button>
+    </div>
+    <form id="mf" class="space-y-4"></form>
+  </div>
+</dialog>
+
+<script>
+/* UI Configuration for Tailwind */
+const UI = {
+  input: "w-full bg-gray-50 dark:bg-zinc-950/50 border border-gray-200 dark:border-zinc-800 text-gray-900 dark:text-white text-sm rounded-xl focus:ring-2 focus:ring-brand focus:border-brand block p-3 outline-none transition-all",
+  select: "w-full bg-gray-50 dark:bg-zinc-950/50 border border-gray-200 dark:border-zinc-800 text-gray-900 dark:text-white text-sm rounded-xl focus:ring-2 focus:ring-brand focus:border-brand block p-3 outline-none transition-all appearance-none",
+  label: "block mb-1.5 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider",
+  btnRow: "flex justify-end gap-3 mt-8 pt-4 border-t border-gray-100 dark:border-zinc-800",
+  btnPri: "px-5 py-2.5 rounded-xl font-semibold transition-all active:scale-95 bg-gray-900 text-white dark:bg-brand dark:text-yellow-950 hover:bg-gray-800 dark:hover:brightness-105 shadow-sm text-sm",
+  btnSec: "px-5 py-2.5 rounded-xl font-semibold transition-all active:scale-95 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-700 text-gray-700 dark:text-gray-300 text-sm",
+  btnDel: "px-3 py-1.5 rounded-lg font-medium transition-all active:scale-95 bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400 hover:bg-red-100 text-xs border border-red-100 dark:border-red-900/30",
+  badgeOk: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 border-green-200 dark:border-green-800/30",
+  badgeWarn: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400 border-yellow-200 dark:border-yellow-800/30",
+  badgeBad: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400 border-red-200 dark:border-red-800/30",
+  metricCard: "bg-white dark:bg-zinc-900 rounded-2xl p-5 border border-gray-200 dark:border-zinc-800 shadow-sm flex flex-col justify-center",
+  td: "px-6 py-4 whitespace-nowrap",
+  emptyRow: "<tr><td colspan='{n}' class='px-6 py-8 text-center text-sm text-gray-500 italic'>No records found.</td></tr>"
+};
+
+const I = {
+  dashboard: 'ph-squares-four', orders: 'ph-receipt', products: 'ph-package', 
+  inventory: 'ph-archive-box', expenses: 'ph-money', wastage: 'ph-trash', 
+  equipment: 'ph-coffee', compliance: 'ph-shield-check', documents: 'ph-file-text', 
+  brand: 'ph-trademark', reports: 'ph-chart-bar', settings: 'ph-gear'
+};
+
+/* --- ORIGINAL LOGIC RETAINED BELOW --- */
 const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbzV2QoO1p35tnY-KySRYMvLTBlpU5YnWE2ibmXpK_Vf5XNPwgwu6wC2v0iZMZVcHX2Dzw/exec";
 let cloudOrders = [];
+let cloudExpenses = [];
+let cloudWastage = [];
 let cloudSyncState = "Not synced";
+let cloudSyncSucceeded = false;
+let cloudExpensesSynced = false;
+let cloudWastageSynced = false;
 
 async function sendOrderToGoogleSheets(order) {
   if (!GOOGLE_SHEETS_URL || GOOGLE_SHEETS_URL.includes("PASTE_YOUR")) return;
@@ -215,22 +394,78 @@ async function sendOrderToGoogleSheets(order) {
   }catch(err){console.error("Google Sheets sync failed:",err)}
 }
 
+
+async function sendExpenseToGoogleSheets(expense) {
+  if (!GOOGLE_SHEETS_URL || GOOGLE_SHEETS_URL.includes("PASTE_YOUR")) return;
+  const payload={
+    action:"addExpense",
+    localId:String(expense.id),
+    date:expense.date,
+    category:expense.category,
+    description:expense.description,
+    amount:+expense.amount||0
+  };
+  try{
+    await fetch(GOOGLE_SHEETS_URL,{method:"POST",mode:"no-cors",
+      headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload)});
+    setTimeout(syncOrdersFromGoogleSheets,900);
+  }catch(err){console.error("Expense Google Sheets sync failed:",err)}
+}
+
+async function sendWastageToGoogleSheets(waste) {
+  if (!GOOGLE_SHEETS_URL || GOOGLE_SHEETS_URL.includes("PASTE_YOUR")) return;
+  const payload={
+    action:"addWastage",
+    localId:String(waste.id),
+    date:waste.date,
+    item:waste.item,
+    reason:waste.reason,
+    loss:+waste.loss||0
+  };
+  try{
+    await fetch(GOOGLE_SHEETS_URL,{method:"POST",mode:"no-cors",
+      headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload)});
+    setTimeout(syncOrdersFromGoogleSheets,900);
+  }catch(err){console.error("Wastage Google Sheets sync failed:",err)}
+}
+
 function syncOrdersFromGoogleSheets(){
   if(!GOOGLE_SHEETS_URL||GOOGLE_SHEETS_URL.includes("PASTE_YOUR")){
-    cloudSyncState="Add Apps Script URL";updateSyncLabel();return;
+    cloudSyncSucceeded=false;cloudSyncState="Add Apps Script URL";updateSyncLabel();return;
   }
   cloudSyncState="Syncing…";updateSyncLabel();
   const old=document.getElementById("soucoCloudSyncScript");if(old)old.remove();
   const s=document.createElement("script");s.id="soucoCloudSyncScript";
-  s.src=GOOGLE_SHEETS_URL+"?action=getOrders&callback=receiveSoucoOrders&_="+Date.now();
-  s.onerror=()=>{cloudSyncState="Sync failed";updateSyncLabel()};
+  s.src=GOOGLE_SHEETS_URL+"?action=getBusinessData&callback=receiveSoucoOrders&_="+Date.now();
+  s.onerror=()=>{cloudSyncSucceeded=false;cloudSyncState="Sync failed";updateSyncLabel()};
   document.body.appendChild(s);
 }
 function receiveSoucoOrders(payload){
-  if(!payload||!payload.success||!Array.isArray(payload.orders)){cloudSyncState="Sync failed";updateSyncLabel();return}
+  if(!payload||!payload.success||!Array.isArray(payload.orders)){cloudSyncSucceeded=false;cloudSyncState="Sync failed";updateSyncLabel();return}
+  cloudSyncSucceeded=true;
+  cloudExpensesSynced=Array.isArray(payload.expenses);
+  cloudWastageSynced=Array.isArray(payload.wastage);
+  cloudExpenses=(payload.expenses||[]).map((x,i)=>({
+    id:x.localId||x.expenseID||("CEXP-"+i),cloud:true,
+    date:x.date||"",category:x.category||"",description:x.description||"",
+    amount:+x.amount||0
+  }));
+  cloudWastage=(payload.wastage||[]).map((x,i)=>({
+    id:x.localId||x.wastageID||("CWAS-"+i),cloud:true,
+    date:x.date||"",item:x.item||"",reason:x.reason||"",loss:+x.loss||0
+  }));
   cloudOrders=payload.orders.map((x,i)=>{
     let p=d.products.find(p=>p.name===x.product);
-    return {id:x.orderID||("CLOUD-"+i),cloud:true,date:x.orderDate||"",
+
+    // Prefer the ISO date from Sheets. If an older Apps Script response
+    // does not include it, recover the date from displayDate or Order ID.
+    let cloudDate=x.orderDate||x.displayDate||"";
+    if(!cloudDate && x.orderID){
+      const dm=String(x.orderID).match(/ORD-(\d{4})(\d{2})(\d{2})/);
+      if(dm) cloudDate=`${dm[1]}-${dm[2]}-${dm[3]}`;
+    }
+
+    return {id:x.orderID||("CLOUD-"+i),cloud:true,date:cloudDate,
       customer:x.customer||"",productId:p?p.id:null,productName:x.product||"Unknown product",
       qty:+x.quantity||0,delivery:+x.codFee||0,total:+x.total||0,
       unitPrice:+x.unitPrice||0,cogs:x.cogs===""?(p?(+p.cost||0)*(+x.quantity||0):0):(+x.cogs||0),
@@ -240,7 +475,9 @@ function receiveSoucoOrders(payload){
   updateSyncLabel();render();
 }
 function updateSyncLabel(){const el=document.getElementById("syncState");if(el)el.textContent=cloudSyncState}
-function salesOrders(){return cloudOrders.length?cloudOrders:d.orders}
+function salesOrders(){return cloudSyncSucceeded?cloudOrders:d.orders}
+function expenseRecords(){return cloudExpensesSynced?cloudExpenses:d.expenses}
+function wastageRecords(){return cloudWastageSynced?cloudWastage:d.wastage}
 function salesPn(x){return x.productName||pn(x.productId)}
 
 const N=[['dashboard','Dashboard'],['orders','Orders'],['products','Products & Costing'],['inventory','Inventory'],['expenses','Expenses'],['wastage','Wastage'],['equipment','Equipment'],['compliance','Compliance'],['documents','Documents'],['brand','Brand Protection'],['reports','Reports'],['settings','Settings']];
@@ -248,15 +485,46 @@ const D={settings:{name:'Souco Coffee',owner:'',tagline:'Brewed for Better Days.
 let d;try{d=JSON.parse(localStorage.getItem('soucoBM'))||structuredClone(D)}catch(e){d=structuredClone(D)}
 const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s), id=()=>Date.now()+Math.floor(Math.random()*999), today=()=>new Date().toISOString().slice(0,10), m=n=>(d.settings.currency||'RM')+' '+Number(n||0).toFixed(2), e=s=>String(s??'').replace(/[&<>"']/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[x]));
 function save(){localStorage.setItem('soucoBM',JSON.stringify(d));render()}
-function setup(){$('#nav').innerHTML=N.map((x,i)=>`<button class="${i?'':'on'}" data-v="${x[0]}">${x[1]}</button>`).join('');$$('#nav button').forEach(b=>b.onclick=()=>show(b.dataset.v))}
-function show(v){$$('.view').forEach(x=>x.classList.remove('on'));$('#'+v).classList.add('on');$$('#nav button').forEach(x=>x.classList.toggle('on',x.dataset.v===v));let n=N.find(x=>x[0]===v);$('#pt').textContent=n[1];$('#ps').textContent=v==='dashboard'?'Your business at a glance.':'Manage '+n[1].toLowerCase()+'.';render()}
-const rev=()=>salesOrders().filter(x=>x.status!=='Cancelled').reduce((s,x)=>s+(+x.total||0),0), cogs=()=>salesOrders().filter(x=>x.status!=='Cancelled').reduce((s,x)=>{if(x.cloud)return s+(+x.cogs||0);let p=d.products.find(p=>p.id==x.productId);return s+(p?(+p.cost||0)*(+x.qty||0):0)},0), ex=()=>d.expenses.reduce((s,x)=>s+ +x.amount,0), wa=()=>d.wastage.reduce((s,x)=>s+ +x.loss,0), pn=i=>d.products.find(x=>x.id==i)?.name||'Deleted product';
+
+function setup(){
+  $('#nav').innerHTML=N.map((x,i)=>{
+    let activeCls = "bg-brand/10 text-brand-dark dark:bg-brand/20 dark:text-brand on shadow-inner";
+    let inactiveCls = "text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-zinc-800 dark:hover:text-gray-100";
+    return `<button class="flex flex-col md:flex-row items-center gap-1 md:gap-3 w-[65px] md:w-full p-2 md:p-3 rounded-xl transition-all duration-200 text-[10px] md:text-sm font-semibold md:font-medium whitespace-nowrap ${i?inactiveCls:activeCls}" data-v="${x[0]}"><i class="ph ${I[x[0]]} text-xl md:text-[22px]"></i> <span class="block md:inline-block truncate w-full text-center md:text-left">${x[1]}</span></button>`
+  }).join('');
+  $$('#nav button').forEach(b=>b.onclick=()=>show(b.dataset.v));
+}
+
+function show(v){
+  $$('.view').forEach(x=>x.classList.remove('on'));
+  $('#'+v).classList.add('on');
+  $$('#nav button').forEach(x=>{
+    let isAct = x.dataset.v===v;
+    x.classList.toggle('on', isAct);
+    x.className = `flex flex-col md:flex-row items-center gap-1 md:gap-3 w-[65px] md:w-full p-2 md:p-3 rounded-xl transition-all duration-200 text-[10px] md:text-sm font-semibold md:font-medium whitespace-nowrap ${isAct ? "bg-brand/10 text-brand-dark dark:bg-brand/20 dark:text-brand on shadow-inner" : "text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-zinc-800 dark:hover:text-gray-100"}`;
+  });
+  let n=N.find(x=>x[0]===v);
+  $('#pt').textContent=n[1];
+  $('#ps').textContent=v==='dashboard'?'Your business at a glance.':'Manage '+n[1].toLowerCase()+'.';
+  render();
+}
+
+const rev=()=>salesOrders().filter(x=>x.status!=='Cancelled').reduce((s,x)=>s+(+x.total||0),0), cogs=()=>salesOrders().filter(x=>x.status!=='Cancelled').reduce((s,x)=>{if(x.cloud)return s+(+x.cogs||0);let p=d.products.find(p=>p.id==x.productId);return s+(p?(+p.cost||0)*(+x.qty||0):0)},0), ex=()=>expenseRecords().reduce((s,x)=>s+ +x.amount,0), wa=()=>wastageRecords().reduce((s,x)=>s+ +x.loss,0), pn=i=>d.products.find(x=>x.id==i)?.name||'Deleted product';
 
 function parseLocalDate(s){
   if(!s) return null;
-  const a=String(s).split('-').map(Number);
-  if(a.length===3 && a.every(Number.isFinite)) return new Date(a[0],a[1]-1,a[2]);
-  const x=new Date(s); return isNaN(x)?null:x;
+  const v=String(s).trim();
+
+  // Google Sheets ISO date: YYYY-MM-DD
+  let a=v.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+  if(a) return new Date(+a[1],+a[2]-1,+a[3],12,0,0);
+
+  // Fallback for display/legacy date: DD/MM/YYYY
+  a=v.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if(a) return new Date(+a[3],+a[2]-1,+a[1],12,0,0);
+
+  const x=new Date(v);
+  return isNaN(x.getTime())?null:x;
 }
 function startOfDay(x){let d2=new Date(x);d2.setHours(0,0,0,0);return d2}
 function periodRange(kind){
@@ -270,16 +538,22 @@ function periodRange(kind){
 }
 function inRange(date,s,e2){let z=parseLocalDate(date);return z&&z>=s&&z<=e2}
 function periodOrders(kind){
+  const rows=salesOrders().filter(x=>x.status!=='Cancelled');
+  if(kind==='allTime') return rows;
   let [s,e2]=periodRange(kind);
-  return salesOrders().filter(x=>x.status!=='Cancelled'&&inRange(x.date,s,e2));
+  return rows.filter(x=>inRange(x.date,s,e2));
 }
 function periodExpenses(kind){
+  const rows=expenseRecords();
+  if(kind==='allTime') return rows;
   let [s,e2]=periodRange(kind);
-  return d.expenses.filter(x=>inRange(x.date,s,e2));
+  return rows.filter(x=>inRange(x.date,s,e2));
 }
 function periodWaste(kind){
+  const rows=wastageRecords();
+  if(kind==='allTime') return rows;
   let [s,e2]=periodRange(kind);
-  return d.wastage.filter(x=>inRange(x.date,s,e2));
+  return rows.filter(x=>inRange(x.date,s,e2));
 }
 function periodStats(kind){
   let os=periodOrders(kind), xs=periodExpenses(kind), ws=periodWaste(kind);
@@ -295,6 +569,7 @@ function periodText(kind){
   if(kind==='allTime') return 'All recorded history';
   return s.toLocaleDateString(undefined,opt)+' – '+e2.toLocaleDateString(undefined,opt);
 }
+
 function renderDashboardAnalytics(){
   if(!document.getElementById('dashPeriod')) return;
   let kind=$('#dashPeriod').value, st=periodStats(kind);
@@ -302,11 +577,10 @@ function renderDashboardAnalytics(){
   $('#periodMetrics').innerHTML=[
     ['Selected Revenue',m(st.revenue)],
     ['Selected Net Profit',m(st.net)],
-    ['Bottles Sold',st.units],
+    ['Units Sold',st.units],
     ['Orders',st.os.length]
-  ].map(x=>`<div class="card metric"><small>${x[0]}</small><strong>${x[1]}</strong></div>`).join('');
+  ].map(x=>`<div class="${UI.metricCard}"><small class="text-[10px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">${x[0]}</small><strong class="text-2xl font-black mt-1 tracking-tight">${x[1]}</strong></div>`).join('');
 
-  // Daily/monthly sales trend depending on selected period
   let grouped={};
   st.os.forEach(o=>{
     let z=parseLocalDate(o.date); if(!z)return;
@@ -316,45 +590,166 @@ function renderDashboardAnalytics(){
   let entries=Object.entries(grouped).sort((a,b)=>a[0].localeCompare(b[0]));
   let max=Math.max(1,...entries.map(x=>x[1]));
   $('#trendHint').textContent=(kind==='thisYear'||kind==='allTime')?'Revenue by month.':'Revenue by selling day.';
-  $('#salesTrend').innerHTML=entries.length?entries.map(([k,v])=>`<div class="chartcol"><div class="chartbar" data-tip="${e(k)} · ${m(v)}" style="height:${Math.max(3,v/max*210)}px"></div><div class="chartlabel">${e(k.slice(5)||k)}</div></div>`).join(''):'<div class="empty">No sales in this period yet.</div>';
+  $('#salesTrend').innerHTML=entries.length?entries.map(([k,v])=>{
+    let label=k;
+    if(/^\d{4}-\d{2}$/.test(k)){
+      const [yy,mm]=k.split('-').map(Number);
+      label=new Date(yy,mm-1,1).toLocaleDateString('en-MY',{month:'short',year:'numeric'});
+    }else if(/^\d{4}-\d{2}-\d{2}$/.test(k)){
+      const [yy,mm,dd]=k.split('-').map(Number);
+      label=new Date(yy,mm-1,dd).toLocaleDateString('en-MY',{day:'numeric',month:'short'});
+    }
+    return `<div class="chartcol"><div class="chartbar" data-tip="${e(label)} · ${m(v)}" style="height:${Math.max(8,v/max*190)}px"></div><div class="chartlabel">${e(label)}</div><div class="chartamount">${m(v)}</div></div>`;
+  }).join(''):'<div class="py-10 text-center w-full text-gray-400 text-sm italic font-medium">No sales data for this period.</div>';
 
   let mix={};st.os.forEach(o=>mix[salesPn(o)]=(mix[salesPn(o)]||0)+(+o.qty||0));
   let arr=Object.entries(mix).sort((a,b)=>b[1]-a[1]), total=arr.reduce((s,x)=>s+x[1],0);
-  if(!total){$('#productMix').innerHTML='<div class="empty">No product sales in this period yet.</div>'}
+  if(!total){$('#productMix').innerHTML='<div class="py-10 text-center w-full text-gray-400 text-sm italic font-medium">No product data for this period.</div>'}
   else{
     let pos=0, stops=[];
-    arr.forEach(([n,v],i)=>{let a=pos/total*100;pos+=v;let b=pos/total*100;let shades=['var(--a)','#8f7a60','#d8c29d','#5f554a','#b7aa96'];stops.push(`${shades[i%shades.length]} ${a}% ${b}%`)});
-    $('#productMix').innerHTML=`<div class="donutwrap"><div class="donut" style="background:conic-gradient(${stops.join(',')})"></div><div class="legend">${arr.map(([n,v])=>`<div><span>${e(n)}</span><b>${v} · ${(v/total*100).toFixed(0)}%</b></div>`).join('')}</div></div>`;
+    arr.forEach(([n,v],i)=>{let a=pos/total*100;pos+=v;let b=pos/total*100;let shades=['var(--a)','#fcd34d','#fbbf24','#f59e0b','#d97706'];stops.push(`${shades[i%shades.length]} ${a}% ${b}%`)});
+    $('#productMix').innerHTML=`<div class="donutwrap w-full"><div class="donut" style="background:conic-gradient(${stops.join(',')})"></div><div class="flex-1 min-w-[150px] space-y-2">${arr.map(([n,v],i)=>`<div class="flex justify-between items-center text-sm"><span class="flex items-center gap-2"><div class="w-3 h-3 rounded-full" style="background:${['var(--a)','#fcd34d','#fbbf24','#f59e0b','#d97706'][i%5]}"></div><span class="text-gray-600 dark:text-gray-300 font-medium">${e(n)}</span></span><b class="font-bold">${v} <span class="text-gray-400 text-xs ml-1 font-medium">${(v/total*100).toFixed(0)}%</span></b></div>`).join('')}</div></div>`;
   }
 }
 
-function render(){document.documentElement.style.setProperty('--a',d.settings.color||'#f4b942');$('#bn').textContent=d.settings.name;$('#li').textContent=(d.settings.name||'S')[0];let units=salesOrders().filter(x=>x.status!=='Cancelled').reduce((s,x)=>s+ +x.qty,0), net=rev()-cogs()-ex()-wa();$('#metrics').innerHTML=[['Revenue',m(rev())],['Gross Profit',m(rev()-cogs())],['Estimated Net',m(net)],['Items Sold',units]].map(x=>`<div class="card metric"><small>${x[0]}</small><strong>${x[1]}</strong></div>`).join('');
-let ct={};salesOrders().filter(x=>x.status!=='Cancelled').forEach(x=>ct[salesPn(x)]=(ct[pn(x.productId)]||0)+ +x.qty);let mx=Math.max(1,...Object.values(ct));$('#bars').innerHTML=d.products.map(p=>`<div class=barrow><div><span>${e(p.name)}</span><b>${ct[p.name]||0}</b></div><div class=bar><i style="width:${(ct[p.name]||0)/mx*100}%"></i></div></div>`).join('');let low=d.inventory.filter(x=>+x.qty<=+x.reorder).length;$('#health').innerHTML=`<div class=alert><b>${m(ex())}</b><span class=hint>Operating expenses</span></div><div class=alert><b>${m(wa())}</b><span class=hint>Wastage</span></div><div class=alert><b>${low} low-stock item(s)</b></div>`;$('#recent').innerHTML=salesOrders().slice(-5).reverse().map(x=>`<tr><td>${x.date}</td><td>${e(x.customer)}</td><td>${e(salesPn(x))}</td><td>${m(x.total)}</td></tr>`).join('')||empty(4);$('#alerts').innerHTML=d.compliance.filter(x=>x.status!=='Completed').slice(0,4).map(x=>`<div class=alert><b>${e(x.type)}</b><span class="badge ${sc(x.status)}">${e(x.status)}</span></div>`).join('')||'<div class=alert><b>No open records</b></div>';tables();complianceRender();settingsRender();reports();evidenceRender();renderDashboardAnalytics()}
-const empty=n=>`<tr><td colspan="${n}" class=empty>No records yet.</td></tr>`,sc=s=>s==='Completed'?'ok':s==='Expired'?'bad':'warn';
-function tables(){$('#ot').innerHTML=d.orders.slice().reverse().map(x=>`<tr><td>${x.date}</td><td>${e(x.customer)}</td><td>${e(pn(x.productId))}</td><td>${x.qty}</td><td>${m(x.total)}</td><td>${e(x.status)}</td><td><button class="btn del" onclick="del('orders',${x.id})">Delete</button></td></tr>`).join('')||empty(7);$('#prt').innerHTML=d.products.map(x=>{let g=x.price-x.cost;return `<tr><td>${e(x.name)}</td><td>${m(x.price)}</td><td>${m(x.cost)}</td><td>${m(g)}</td><td>${(g/x.price*100).toFixed(1)}%</td><td><button class="btn del" onclick="del('products',${x.id})">Delete</button></td></tr>`}).join('')||empty(6);$('#it').innerHTML=d.inventory.map(x=>`<tr><td>${e(x.name)}</td><td>${e(x.category)}</td><td>${x.qty} ${e(x.unit)}</td><td>${x.reorder} ${e(x.unit)}</td><td>${m(x.cost)}</td><td><span class="badge ${+x.qty<=+x.reorder?'bad':'ok'}">${+x.qty<=+x.reorder?'Low':'OK'}</span></td><td><button class="btn del" onclick="del('inventory',${x.id})">Delete</button></td></tr>`).join('')||empty(7);$('#et').innerHTML=d.expenses.slice().reverse().map(x=>`<tr><td>${x.date}</td><td>${e(x.category)}</td><td>${e(x.description)}</td><td>${m(x.amount)}</td><td><button class="btn del" onclick="del('expenses',${x.id})">Delete</button></td></tr>`).join('')||empty(5);$('#wt').innerHTML=d.wastage.slice().reverse().map(x=>`<tr><td>${x.date}</td><td>${e(x.item)}</td><td>${e(x.reason)}</td><td>${m(x.loss)}</td><td><button class="btn del" onclick="del('wastage',${x.id})">Delete</button></td></tr>`).join('')||empty(5);$('#eqt').innerHTML=d.equipment.slice().reverse().map(x=>`<tr><td>${e(x.name)}</td><td>${x.date}</td><td>${m(x.cost)}</td><td>${x.warranty||'-'}</td><td><button class="btn del" onclick="del('equipment',${x.id})">Delete</button></td></tr>`).join('')||empty(5);docsRender()}
-function del(k,i){if(confirm('Delete this record?')){d[k]=d[k].filter(x=>x.id!==i);save()}}
-function form(title,html,fn){$('#mt').textContent=title;$('#mf').innerHTML=html+`<div class=actions><button type=button class="btn sec" onclick="modal.close()">Cancel</button><button class=btn>Save</button></div>`;$('#mf').onsubmit=x=>{x.preventDefault();fn(new FormData(x.target));modal.close();save()};modal.showModal()}
-function orderForm(){form('New Order',`<div class=fg><div><label>Date</label><input name=date type=date value="${today()}" required></div><div><label>Customer</label><input name=customer required></div><div><label>Product</label><select name=product>${d.products.map(p=>`<option value="${p.id}">${e(p.name)} — ${m(p.price)}</option>`)}</select></div><div><label>Quantity</label><input name=qty type=number min=1 value=1></div><div><label>Delivery Fee</label><input name=delivery type=number step=.01 value=0></div><div><label>Status</label><select name=status><option>Confirmed</option><option>Preparing</option><option>Ready</option><option>Delivered</option><option>Picked Up</option><option>Cancelled</option></select></div></div>`,f=>{let p=d.products.find(x=>x.id==f.get('product')),q=+f.get('qty'),delivery=+f.get('delivery')||0;let order={id:id(),date:f.get('date'),customer:f.get('customer'),productId:+f.get('product'),qty:q,delivery:delivery,total:p.price*q+delivery,status:f.get('status')};d.orders.push(order);sendOrderToGoogleSheets(order)})}
-function productForm(){form('Add Product',`<div class=fg><div><label>Name</label><input name=name required></div><div><label>Price RM</label><input name=price type=number step=.01 required></div><div><label>Direct Cost RM</label><input name=cost type=number step=.01 required></div></div>`,f=>d.products.push({id:id(),name:f.get('name'),price:+f.get('price'),cost:+f.get('cost')}))}
-function inventoryForm(){form('Add Inventory',`<div class=fg><div><label>Item</label><input name=name required></div><div><label>Category</label><input name=category value="Ingredients"></div><div><label>Quantity</label><input name=qty type=number step=.01></div><div><label>Unit</label><select name=unit><option>g</option><option>kg</option><option>ml</option><option>L</option><option>pcs</option></select></div><div><label>Reorder At</label><input name=reorder type=number step=.01 value=0></div><div><label>Cost/Unit RM</label><input name=cost type=number step=.001 value=0></div></div>`,f=>d.inventory.push({id:id(),name:f.get('name'),category:f.get('category'),qty:+f.get('qty'),unit:f.get('unit'),reorder:+f.get('reorder'),cost:+f.get('cost')}))}
-function expenseForm(){form('Add Expense',`<div class=fg><div><label>Date</label><input name=date type=date value="${today()}"></div><div><label>Category</label><select name=category><option>Ingredients</option><option>Packaging</option><option>Delivery</option><option>Marketing</option><option>Registration</option><option>Training</option><option>Vaccination</option><option>Maintenance</option><option>Other</option></select></div><div class=full><label>Description</label><input name=description required></div><div><label>Amount RM</label><input name=amount type=number step=.01 required></div></div>`,f=>d.expenses.push({id:id(),date:f.get('date'),category:f.get('category'),description:f.get('description'),amount:+f.get('amount')}))}
-function wasteForm(){form('Record Wastage',`<div class=fg><div><label>Date</label><input name=date type=date value="${today()}"></div><div><label>Item</label><input name=item required></div><div><label>Reason</label><input name=reason required></div><div><label>Loss RM</label><input name=loss type=number step=.01 required></div></div>`,f=>d.wastage.push({id:id(),date:f.get('date'),item:f.get('item'),reason:f.get('reason'),loss:+f.get('loss')}))}
-function equipmentForm(){form('Add Equipment',`<div class=fg><div><label>Name</label><input name=name required></div><div><label>Purchase Date</label><input name=date type=date value="${today()}"></div><div><label>Cost RM</label><input name=cost type=number step=.01 required></div><div><label>Warranty Expiry</label><input name=warranty type=date></div></div>`,f=>d.equipment.push({id:id(),name:f.get('name'),date:f.get('date'),cost:+f.get('cost'),warranty:f.get('warranty')}))}
-function complianceRender(){$('#cc').innerHTML=d.compliance.map(x=>`<div class=card><span class="badge ${sc(x.status)}">${e(x.status)}</span><h3>${e(x.type)}</h3><p class=hint>${x.expiry?'Expiry/review: '+x.expiry:'No review date'}</p><p>${e(x.notes||'No notes.')}</p><button class="btn sec" onclick="complianceForm('${e(x.type)}')">Update</button></div>`).join('');let a=['Register/review SSM business record','Complete recognised Food Handler Training where applicable','Record typhoid vaccination where applicable','Check university/residence rules','Check applicable local authority requirements','Search trademark before major brand investment','Keep sales, expenses and supplier receipts','Review current tax/e-Invoice requirements annually'];$('#check').innerHTML=a.map(x=>`<div class=alert><b>${x}</b><span class=hint>Verify current applicability with the relevant authority.</span></div>`).join('')}
-function complianceForm(t){let x=t?d.compliance.find(y=>y.type===t):null;form(x?'Update Compliance':'Add Compliance',`<div class=fg><div><label>Type</label><input name=type value="${e(x?.type||'')}" required></div><div><label>Status</label><select name=status>${['Not Started','In Progress','Completed','Expiring Soon','Expired','Not Applicable'].map(s=>`<option ${x?.status===s?'selected':''}>${s}</option>`)}</select></div><div><label>Filing/Completion Date</label><input name=date type=date value="${x?.date||''}"></div><div><label>Expiry/Review Date</label><input name=expiry type=date value="${x?.expiry||''}"></div><div class=full><label>Reference No.</label><input name=reference value="${e(x?.reference||'')}"></div><div class=full><label>Notes</label><textarea name=notes>${e(x?.notes||'')}</textarea></div></div>`,f=>{let o={id:x?.id||id(),type:f.get('type'),status:f.get('status'),date:f.get('date'),expiry:f.get('expiry'),reference:f.get('reference'),notes:f.get('notes')};x?Object.assign(x,o):d.compliance.push(o)})}
-function settingsRender(){let f=$('#sf');Object.entries(d.settings).forEach(([k,v])=>{if(f.elements[k])f.elements[k].value=v??''})}function saveSettings(x){x.preventDefault();for(let [k,v] of new FormData(x.target))d.settings[k]=v;save();alert('Saved.')}
-function reports(){let units=salesOrders().filter(x=>x.status!=='Cancelled').reduce((s,x)=>s+ +x.qty,0);$('#rm').innerHTML=[['Revenue',m(rev())],['COGS',m(cogs())],['Expenses',m(ex())],['Wastage',m(wa())],['Estimated Net',m(rev()-cogs()-ex()-wa())],['Equipment',m(d.equipment.reduce((s,x)=>s+ +x.cost,0))],['Units Sold',units]].map(x=>`<div class="card metric"><small>${x[0]}</small><strong>${x[1]}</strong></div>`).join('')}
-function evidenceRender(){$('#ev').innerHTML=d.evidence.slice().sort((a,b)=>a.date.localeCompare(b.date)).map(x=>`<div class=alert><b>${x.date} — ${e(x.title)}</b><span class=hint>${e(x.type)} · ${e(x.notes||'')}</span></div>`).join('')||'<div class=empty>No evidence yet.</div>';let t=d.compliance.find(x=>x.type==='MyIPO Trademark');$('#tm').innerHTML=`<p><span class="badge ${sc(t.status)}">${t.status}</span></p><p><b>Reference:</b> ${e(t.reference||'Not recorded')}</p><p><b>Filing:</b> ${t.date||'Not recorded'}</p><p><b>Review/Renewal:</b> ${t.expiry||'Not recorded'}</p>`}
-function evidenceForm(){form('Add Brand Evidence',`<div class=fg><div><label>Date</label><input name=date type=date value="${today()}"></div><div><label>Type</label><select name=type><option>First Sale</option><option>Logo</option><option>Sticker / Packaging</option><option>Social Post</option><option>Invoice / Receipt</option><option>Product Photo</option><option>Other</option></select></div><div class=full><label>Title</label><input name=title required></div><div class=full><label>Notes</label><textarea name=notes></textarea></div></div>`,f=>d.evidence.push({id:id(),date:f.get('date'),type:f.get('type'),title:f.get('title'),notes:f.get('notes')}))}
-function csv(k){let a=d[k];if(!a.length)return alert('No records.');let keys=Object.keys(a[0]),s=[keys.join(','),...a.map(r=>keys.map(q=>'"'+String(r[q]??'').replaceAll('"','""')+'"').join(','))].join('\n');dl(k+'.csv',s,'text/csv')}function backup(){dl((d.settings.name||'business').replace(/\W+/g,'_')+'_backup.json',JSON.stringify(d,null,2),'application/json')}function dl(n,s,t){let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([s],{type:t}));a.download=n;a.click()}
-function restore(i){let f=i.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let z=JSON.parse(r.result);if(!z.settings||!z.orders)throw 0;d=z;save();alert('Backup restored.')}catch(e){alert('Invalid backup.')}};r.readAsText(f)}function resetApp(){if(confirm('Delete all app records in this browser?')){d=structuredClone(D);save()}}function theme(){document.body.classList.toggle('dark');localStorage.setItem('soucoDark',document.body.classList.contains('dark')?'1':'0')}if(localStorage.getItem('soucoDark')==='1')document.body.classList.add('dark');
-let db;let rq=indexedDB.open('SoucoDocs',1);rq.onupgradeneeded=x=>x.target.result.createObjectStore('files',{keyPath:'id'});rq.onsuccess=x=>{db=x.target.result;docsRender()}
-function documentForm(){form('Add Document',`<div class=fg><div><label>Title</label><input name=title required></div><div><label>Category</label><select name=category><option>SSM</option><option>Food Handler Training</option><option>Vaccination</option><option>MyIPO</option><option>Tax</option><option>Supplier</option><option>Receipt</option><option>Equipment</option><option>University Permission</option><option>Brand Evidence</option><option>Other</option></select></div><div><label>Issue Date</label><input name=issue type=date></div><div><label>Expiry</label><input name=expiry type=date></div><div class=full><label>PDF/JPG/PNG</label><input name=file type=file accept=".pdf,.jpg,.jpeg,.png" required></div></div>`,f=>{let file=f.get('file'),i=id();d.docsMeta.push({id:i,title:f.get('title'),category:f.get('category'),issue:f.get('issue'),expiry:f.get('expiry'),filename:file.name});if(db)db.transaction('files','readwrite').objectStore('files').put({id:i,file})})}
-function docsRender(){if(!$('#dt'))return;$('#dt').innerHTML=(d.docsMeta||[]).map(x=>`<tr><td>${e(x.title)}</td><td>${e(x.category)}</td><td>${x.issue||'-'}</td><td>${x.expiry||'-'}</td><td><button class="btn sec" onclick="getDoc(${x.id})">${e(x.filename)}</button></td><td><button class="btn del" onclick="delDoc(${x.id})">Delete</button></td></tr>`).join('')||empty(6)}
-function getDoc(i){if(!db)return;let r=db.transaction('files').objectStore('files').get(i);r.onsuccess=()=>{if(!r.result)return alert('File unavailable in this browser.');let u=URL.createObjectURL(r.result.file),a=document.createElement('a');a.href=u;a.download=r.result.file.name;a.click()}}function delDoc(i){if(confirm('Delete document?')){d.docsMeta=d.docsMeta.filter(x=>x.id!==i);if(db)db.transaction('files','readwrite').objectStore('files').delete(i);save()}}
-function toggleMobileMenu(){document.getElementById('mobileMenu')?.classList.toggle('open')}
-function mobileGo(id){document.getElementById('mobileMenu')?.classList.remove('open');go(id)}
-document.addEventListener('click',ev=>{let x=document.getElementById('mobileMenu'),b=document.querySelector('.mobile-more');if(x?.classList.contains('open')&&!x.contains(ev.target)&&!b?.contains(ev.target))x.classList.remove('open')});
+function render(){
+  document.documentElement.style.setProperty('--a',d.settings.color||'#f4b942');
+  $('#bn').textContent=d.settings.name;
+  $('#li').textContent=(d.settings.name||'S')[0];
+  let units=salesOrders().filter(x=>x.status!=='Cancelled').reduce((s,x)=>s+ +x.qty,0), net=rev()-cogs()-ex()-wa();
+  
+  $('#metrics').innerHTML=[['All Time Revenue',m(rev())],['Gross Profit',m(rev()-cogs())],['Est. Net Profit',m(net)],['Total Items Sold',units]].map(x=>`<div class="${UI.metricCard}"><small class="text-[10px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">${x[0]}</small><strong class="text-2xl font-black mt-1 tracking-tight">${x[1]}</strong></div>`).join('');
+  
+  let ct={};salesOrders().filter(x=>x.status!=='Cancelled').forEach(x=>ct[salesPn(x)]=(ct[pn(x.productId)]||0)+ +x.qty);
+  let mx=Math.max(1,...Object.values(ct));
+  $('#bars').innerHTML=d.products.map(p=>`<div class="bar-row-custom"><div><span class="text-gray-700 dark:text-gray-300">${e(p.name)}</span><b class="font-bold">${ct[p.name]||0}</b></div><div class="bar-track"><i class="bar-fill" style="width:${(ct[p.name]||0)/mx*100}%"></i></div></div>`).join('');
+  
+  let low=d.inventory.filter(x=>+x.qty<=+x.reorder).length;
+  let alertCls = "p-3 rounded-xl border flex justify-between items-center text-sm font-medium";
+  $('#health').innerHTML=`<div class="${alertCls} bg-gray-50 dark:bg-zinc-800/50 border-gray-200 dark:border-zinc-700"><span>Operating Exp.</span><b class="font-bold">${m(ex())}</b></div><div class="${alertCls} bg-gray-50 dark:bg-zinc-800/50 border-gray-200 dark:border-zinc-700"><span>Wastage</span><b class="font-bold text-red-600 dark:text-red-400">${m(wa())}</b></div><div class="${alertCls} ${low?UI.badgeWarn:'bg-gray-50 border-gray-200 dark:bg-zinc-800/50 dark:border-zinc-700'}"><span>Low Stock Items</span><b class="font-bold">${low}</b></div>`;
+  
+  $('#recent').innerHTML=salesOrders().slice(-5).reverse().map(x=>`<tr><td class="${UI.td}">${x.date}</td><td class="${UI.td} font-medium">${e(x.customer)}</td><td class="${UI.td}">${e(salesPn(x))}</td><td class="${UI.td} font-bold">${m(x.total)}</td></tr>`).join('')||UI.emptyRow.replace('{n}','4');
+  
+  $('#alerts').innerHTML=d.compliance.filter(x=>x.status!=='Completed').slice(0,4).map(x=>`<div class="${alertCls} bg-gray-50 dark:bg-zinc-800/50 border-gray-200 dark:border-zinc-700"><span class="truncate pr-2">${e(x.type)}</span><span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider border ${sc(x.status)}">${e(x.status)}</span></div>`).join('')||`<div class="${alertCls} bg-green-50 text-green-700 border-green-200 dark:bg-green-900/20 dark:border-green-900/30 dark:text-green-400"><b>All records up to date!</b></div>`;
+  
+  tables(); complianceRender(); settingsRender(); reports(); evidenceRender(); renderDashboardAnalytics();
+}
 
-setup();render();setTimeout(syncOrdersFromGoogleSheets,500);
-</script></body></html>
+const empty=n=>UI.emptyRow.replace('{n}',n);
+const sc=s=>s==='Completed'?UI.badgeOk:s==='Expired'?UI.badgeBad:UI.badgeWarn;
+
+function tables(){
+  $('#ot').innerHTML=d.orders.slice().reverse().map(x=>`<tr><td class="${UI.td}">${x.date}</td><td class="${UI.td} font-medium">${e(x.customer)}</td><td class="${UI.td}">${e(pn(x.productId))}</td><td class="${UI.td}">${x.qty}</td><td class="${UI.td} font-bold">${m(x.total)}</td><td class="${UI.td}"><span class="px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider bg-gray-100 dark:bg-zinc-800">${e(x.status)}</span></td><td class="${UI.td} text-right"><button class="${UI.btnDel}" onclick="del('orders',${x.id})">Delete</button></td></tr>`).join('')||empty(7);
+  $('#prt').innerHTML=d.products.map(x=>{let g=x.price-x.cost;return `<tr><td class="${UI.td} font-medium">${e(x.name)}</td><td class="${UI.td}">${m(x.price)}</td><td class="${UI.td}">${m(x.cost)}</td><td class="${UI.td} font-bold text-green-600 dark:text-green-400">${m(g)}</td><td class="${UI.td} font-bold">${(g/x.price*100).toFixed(1)}%</td><td class="${UI.td} text-right"><button class="${UI.btnDel}" onclick="del('products',${x.id})">Delete</button></td></tr>`}).join('')||empty(6);
+  $('#it').innerHTML=d.inventory.map(x=>`<tr><td class="${UI.td} font-medium">${e(x.name)}</td><td class="${UI.td}">${e(x.category)}</td><td class="${UI.td} font-bold">${x.qty} <span class="text-xs font-normal text-gray-500">${e(x.unit)}</span></td><td class="${UI.td}">${x.reorder} ${e(x.unit)}</td><td class="${UI.td}">${m(x.cost)}</td><td class="${UI.td}"><span class="px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider border ${+x.qty<=+x.reorder?UI.badgeBad:UI.badgeOk}">${+x.qty<=+x.reorder?'Low':'OK'}</span></td><td class="${UI.td} text-right"><button class="${UI.btnDel}" onclick="del('inventory',${x.id})">Delete</button></td></tr>`).join('')||empty(7);
+  $('#et').innerHTML=expenseRecords().slice().reverse().map(x=>`<tr><td class="${UI.td}">${x.date}</td><td class="${UI.td} font-medium">${e(x.category)}</td><td class="${UI.td} text-gray-600 dark:text-gray-400">${e(x.description)}</td><td class="${UI.td} font-bold">${m(x.amount)}</td><td class="${UI.td} text-right">${x.cloud?'<span class="text-[10px] font-bold text-gray-400 uppercase">Sheet</span>':`<button class="${UI.btnDel}" onclick="del('expenses',${x.id})">Delete</button>`}</td></tr>`).join('')||empty(5);
+  $('#wt').innerHTML=wastageRecords().slice().reverse().map(x=>`<tr><td class="${UI.td}">${x.date}</td><td class="${UI.td} font-medium">${e(x.item)}</td><td class="${UI.td} text-gray-600 dark:text-gray-400">${e(x.reason)}</td><td class="${UI.td} font-bold text-red-600 dark:text-red-400">${m(x.loss)}</td><td class="${UI.td} text-right">${x.cloud?'<span class="text-[10px] font-bold text-gray-400 uppercase">Sheet</span>':`<button class="${UI.btnDel}" onclick="del('wastage',${x.id})">Delete</button>`}</td></tr>`).join('')||empty(5);
+  $('#eqt').innerHTML=d.equipment.slice().reverse().map(x=>`<tr><td class="${UI.td} font-medium">${e(x.name)}</td><td class="${UI.td}">${x.date}</td><td class="${UI.td} font-bold">${m(x.cost)}</td><td class="${UI.td}">${x.warranty||'-'}</td><td class="${UI.td} text-right"><button class="${UI.btnDel}" onclick="del('equipment',${x.id})">Delete</button></td></tr>`).join('')||empty(5);
+  docsRender();
+}
+function del(k,i){if(confirm('Delete this record?')){d[k]=d[k].filter(x=>x.id!==i);save()}}
+
+function form(title,html,fn){
+  $('#mt').textContent=title;
+  $('#mf').innerHTML=html+`<div class="${UI.btnRow}"><button type="button" class="${UI.btnSec}" onclick="modal.close()">Cancel</button><button class="${UI.btnPri}">Save Record</button></div>`;
+  $('#mf').onsubmit=x=>{x.preventDefault();fn(new FormData(x.target));modal.close();save()};
+  modal.showModal();
+}
+
+function orderForm(){form('New Order',`<div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label class="${UI.label}">Date</label><input class="${UI.input}" name="date" type="date" value="${today()}" required></div><div><label class="${UI.label}">Customer Name</label><input class="${UI.input}" name="customer" placeholder="e.g. John Doe" required></div><div><label class="${UI.label}">Product</label><select class="${UI.select}" name="product">${d.products.map(p=>`<option value="${p.id}">${e(p.name)} — ${m(p.price)}</option>`)}</select></div><div><label class="${UI.label}">Quantity</label><input class="${UI.input}" name="qty" type="number" min="1" value="1"></div><div><label class="${UI.label}">Delivery Fee</label><input class="${UI.input}" name="delivery" type="number" step=".01" value="0"></div><div><label class="${UI.label}">Status</label><select class="${UI.select}" name="status"><option>Confirmed</option><option>Preparing</option><option>Ready</option><option>Delivered</option><option>Picked Up</option><option>Cancelled</option></select></div></div>`,f=>{let p=d.products.find(x=>x.id==f.get('product')),q=+f.get('qty'),delivery=+f.get('delivery')||0;let order={id:id(),date:f.get('date'),customer:f.get('customer'),productId:+f.get('product'),qty:q,delivery:delivery,total:p.price*q+delivery,status:f.get('status')};d.orders.push(order);sendOrderToGoogleSheets(order)})}
+
+function productForm(){form('Add Product',`<div class="grid grid-cols-1 gap-4"><div><label class="${UI.label}">Product Name</label><input class="${UI.input}" name="name" required></div><div class="grid grid-cols-2 gap-4"><div><label class="${UI.label}">Selling Price (RM)</label><input class="${UI.input}" name="price" type="number" step=".01" required></div><div><label class="${UI.label}">Direct Cost (RM)</label><input class="${UI.input}" name="cost" type="number" step=".01" required></div></div></div>`,f=>d.products.push({id:id(),name:f.get('name'),price:+f.get('price'),cost:+f.get('cost')}))}
+
+function inventoryForm(){form('Add Inventory Item',`<div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label class="${UI.label}">Item Name</label><input class="${UI.input}" name="name" required></div><div><label class="${UI.label}">Category</label><input class="${UI.input}" name="category" value="Ingredients"></div><div><label class="${UI.label}">Current Quantity</label><input class="${UI.input}" name="qty" type="number" step=".01"></div><div><label class="${UI.label}">Unit of Measure</label><select class="${UI.select}" name="unit"><option>g</option><option>kg</option><option>ml</option><option>L</option><option>pcs</option></select></div><div><label class="${UI.label}">Reorder Alert At</label><input class="${UI.input}" name="reorder" type="number" step=".01" value="0"></div><div><label class="${UI.label}">Cost per Unit (RM)</label><input class="${UI.input}" name="cost" type="number" step=".001" value="0"></div></div>`,f=>d.inventory.push({id:id(),name:f.get('name'),category:f.get('category'),qty:+f.get('qty'),unit:f.get('unit'),reorder:+f.get('reorder'),cost:+f.get('cost')}))}
+
+function expenseForm(){form('Record Expense',`<div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label class="${UI.label}">Date</label><input class="${UI.input}" name="date" type="date" value="${today()}"></div><div><label class="${UI.label}">Category</label><select class="${UI.select}" name="category"><option>Ingredients</option><option>Packaging</option><option>Delivery</option><option>Marketing</option><option>Registration</option><option>Training</option><option>Vaccination</option><option>Maintenance</option><option>Other</option></select></div><div class="md:col-span-2"><label class="${UI.label}">Description</label><input class="${UI.input}" name="description" required></div><div><label class="${UI.label}">Amount (RM)</label><input class="${UI.input}" name="amount" type="number" step=".01" required></div></div>`,f=>{let expense={id:id(),date:f.get('date'),category:f.get('category'),description:f.get('description'),amount:+f.get('amount')};d.expenses.push(expense);sendExpenseToGoogleSheets(expense)})}
+
+function wasteForm(){form('Record Wastage',`<div class="grid grid-cols-1 gap-4"><div><label class="${UI.label}">Date</label><input class="${UI.input}" name="date" type="date" value="${today()}"></div><div><label class="${UI.label}">Item Wasted</label><input class="${UI.input}" name="item" required></div><div><label class="${UI.label}">Reason</label><input class="${UI.input}" name="reason" placeholder="e.g. Expired, Spilled" required></div><div><label class="${UI.label}">Estimated Loss (RM)</label><input class="${UI.input}" name="loss" type="number" step=".01" required></div></div>`,f=>{let waste={id:id(),date:f.get('date'),item:f.get('item'),reason:f.get('reason'),loss:+f.get('loss')};d.wastage.push(waste);sendWastageToGoogleSheets(waste)})}
+
+function equipmentForm(){form('Add Equipment',`<div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label class="${UI.label}">Equipment Name</label><input class="${UI.input}" name="name" required></div><div><label class="${UI.label}">Purchase Date</label><input class="${UI.input}" name="date" type="date" value="${today()}"></div><div><label class="${UI.label}">Cost (RM)</label><input class="${UI.input}" name="cost" type="number" step=".01" required></div><div><label class="${UI.label}">Warranty Expiry</label><input class="${UI.input}" name="warranty" type="date"></div></div>`,f=>d.equipment.push({id:id(),name:f.get('name'),date:f.get('date'),cost:+f.get('cost'),warranty:f.get('warranty')}))}
+
+function complianceRender(){
+  $('#cc').innerHTML=d.compliance.map(x=>`<div class="bg-white dark:bg-zinc-900 rounded-2xl p-5 border border-gray-200 dark:border-zinc-800 shadow-sm flex flex-col items-start"><span class="px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider border mb-3 ${sc(x.status)}">${e(x.status)}</span><h3 class="font-bold text-gray-900 dark:text-white">${e(x.type)}</h3><p class="text-xs text-gray-500 mt-1 mb-3">${x.expiry?'Review by: '+x.expiry:'No review date set'}</p><p class="text-sm text-gray-600 dark:text-gray-400 flex-1">${e(x.notes||'No notes.')}</p><button class="${UI.btnSec} w-full mt-4 !py-1.5" onclick="complianceForm('${e(x.type)}')">Update</button></div>`).join('');
+  let a=['Register/review SSM business record','Complete recognized Food Handler Training','Record typhoid vaccination','Check university/residence rules','Check local authority requirements','Search trademark before major brand investment','Keep sales, expenses and supplier receipts','Review current tax/e-Invoice requirements'];
+  $('#check').innerHTML=a.map(x=>`<div class="flex items-start gap-2 p-3 bg-gray-50 dark:bg-zinc-800/50 rounded-xl border border-gray-100 dark:border-zinc-700/50"><i class="ph ph-info text-brand mt-0.5"></i><div class="text-sm font-medium text-gray-700 dark:text-gray-300">${x}</div></div>`).join('');
+}
+
+function complianceForm(t){let x=t?d.compliance.find(y=>y.type===t):null;form(x?'Update Compliance Record':'Add Custom Compliance',`<div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label class="${UI.label}">Record Type</label><input class="${UI.input}" name="type" value="${e(x?.type||'')}" required></div><div><label class="${UI.label}">Status</label><select class="${UI.select}" name="status">${['Not Started','In Progress','Completed','Expiring Soon','Expired','Not Applicable'].map(s=>`<option ${x?.status===s?'selected':''}>${s}</option>`)}</select></div><div><label class="${UI.label}">Filing/Completion Date</label><input class="${UI.input}" name="date" type="date" value="${x?.date||''}"></div><div><label class="${UI.label}">Expiry/Review Date</label><input class="${UI.input}" name="expiry" type="date" value="${x?.expiry||''}"></div><div class="md:col-span-2"><label class="${UI.label}">Reference / Cert No.</label><input class="${UI.input}" name="reference" value="${e(x?.reference||'')}"></div><div class="md:col-span-2"><label class="${UI.label}">Notes</label><textarea class="${UI.input} min-h-[80px]" name="notes">${e(x?.notes||'')}</textarea></div></div>`,f=>{let o={id:x?.id||id(),type:f.get('type'),status:f.get('status'),date:f.get('date'),expiry:f.get('expiry'),reference:f.get('reference'),notes:f.get('notes')};x?Object.assign(x,o):d.compliance.push(o)})}
+
+function settingsRender(){
+  let shtml = `
+    <div><label class="${UI.label}">Business Name</label><input class="${UI.input}" name="name" required></div>
+    <div><label class="${UI.label}">Owner Name</label><input class="${UI.input}" name="owner"></div>
+    <div><label class="${UI.label}">Tagline</label><input class="${UI.input}" name="tagline"></div>
+    <div><label class="${UI.label}">WhatsApp Contact</label><input class="${UI.input}" name="phone"></div>
+    <div><label class="${UI.label}">Email Address</label><input class="${UI.input}" name="email" type="email"></div>
+    <div><label class="${UI.label}">Operating Area/City</label><input class="${UI.input}" name="area"></div>
+    <div><label class="${UI.label}">SSM Reg. Number</label><input class="${UI.input}" name="ssm"></div>
+    <div><label class="${UI.label}">Start Date</label><input class="${UI.input}" name="start" type="date"></div>
+    <div><label class="${UI.label}">Business Stage</label><select class="${UI.select}" name="student"><option>Student Entrepreneur</option><option>Standard Business</option></select></div>
+    <div><label class="${UI.label}">University (if applicable)</label><input class="${UI.input}" name="university"></div>
+    <div><label class="${UI.label}">Brand Primary Color</label><div class="flex items-center gap-2"><input class="w-12 h-12 rounded cursor-pointer border-0 p-0" name="color" type="color"><span class="text-xs text-gray-500">Used in charts</span></div></div>
+    <div><label class="${UI.label}">Currency Symbol</label><select class="${UI.select}" name="currency"><option value="RM">MYR (RM)</option></select></div>
+    <div class="md:col-span-2"><label class="${UI.label}">Business Description</label><textarea class="${UI.input} min-h-[100px]" name="description"></textarea></div>
+    <div class="md:col-span-2 flex justify-end mt-4"><button class="${UI.btnPri} w-full md:w-auto"><i class="ph ph-floppy-disk"></i> Save Settings</button></div>
+  `;
+  let f=$('#sf'); f.innerHTML = shtml;
+  Object.entries(d.settings).forEach(([k,v])=>{if(f.elements[k])f.elements[k].value=v??''})
+}
+function saveSettings(x){
+  x.preventDefault();
+  let btn = x.target.querySelector('button');
+  let origText = btn.innerHTML;
+  btn.innerHTML = '<i class="ph ph-check-circle"></i> Saved!';
+  btn.classList.add('bg-green-600', 'text-white');
+  for(let [k,v] of new FormData(x.target)) d.settings[k]=v;
+  save();
+  setTimeout(()=>{ btn.innerHTML = origText; btn.classList.remove('bg-green-600', 'text-white'); }, 2000);
+}
+
+function reports(){
+  let units=salesOrders().filter(x=>x.status!=='Cancelled').reduce((s,x)=>s+ +x.qty,0);
+  $('#rm').innerHTML=[['All Time Rev.',m(rev())],['Total COGS',m(cogs())],['Total Expenses',m(ex())],['Total Wastage',m(wa())],['Net Profit Est.',m(rev()-cogs()-ex()-wa())],['Equipment Assets',m(d.equipment.reduce((s,x)=>s+ +x.cost,0))],['Total Units',units]].map(x=>`<div class="${UI.metricCard}"><small class="text-[10px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">${x[0]}</small><strong class="text-xl font-bold mt-1 tracking-tight">${x[1]}</strong></div>`).join('')
+}
+
+function evidenceRender(){
+  $('#ev').innerHTML=d.evidence.slice().sort((a,b)=>a.date.localeCompare(b.date)).map(x=>`<div class="p-3 bg-gray-50 dark:bg-zinc-800/50 rounded-xl border border-gray-100 dark:border-zinc-700/50"><b class="block text-sm font-bold text-gray-900 dark:text-gray-100">${x.date} — ${e(x.title)}</b><span class="text-xs text-gray-500 dark:text-gray-400 font-medium">${e(x.type)} ${x.notes?'· '+e(x.notes):''}</span></div>`).join('')||'<div class="text-sm italic text-gray-400 p-4 text-center">No brand evidence recorded yet.</div>';
+  let t=d.compliance.find(x=>x.type==='MyIPO Trademark');
+  $('#tm').innerHTML=`<div class="flex items-center gap-2 mb-3"><span class="px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider border ${sc(t.status)}">${t.status}</span></div><div class="grid grid-cols-2 gap-2"><div class="text-gray-500">Ref:</div><div class="font-medium text-gray-900 dark:text-gray-100">${e(t.reference||'-')}</div><div class="text-gray-500">Filed:</div><div class="font-medium text-gray-900 dark:text-gray-100">${t.date||'-'}</div><div class="text-gray-500">Review:</div><div class="font-medium text-gray-900 dark:text-gray-100">${t.expiry||'-'}</div></div>`;
+}
+
+function evidenceForm(){form('Add Brand Evidence',`<div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label class="${UI.label}">Date</label><input class="${UI.input}" name="date" type="date" value="${today()}"></div><div><label class="${UI.label}">Evidence Type</label><select class="${UI.select}" name="type"><option>First Sale</option><option>Logo Creation</option><option>Sticker / Packaging</option><option>Social Post</option><option>Invoice / Receipt</option><option>Product Photo</option><option>Other</option></select></div><div class="md:col-span-2"><label class="${UI.label}">Title</label><input class="${UI.input}" name="title" placeholder="e.g. First Instagram Post" required></div><div class="md:col-span-2"><label class="${UI.label}">Notes</label><textarea class="${UI.input}" name="notes"></textarea></div></div>`,f=>d.evidence.push({id:id(),date:f.get('date'),type:f.get('type'),title:f.get('title'),notes:f.get('notes')}))}
+
+function csv(k){let a=k==='expenses'?expenseRecords():k==='wastage'?wastageRecords():d[k];if(!a.length)return alert('No records to export.');let keys=Object.keys(a[0]),s=[keys.join(','),...a.map(r=>keys.map(q=>'"'+String(r[q]??'').replaceAll('"','""')+'"').join(','))].join('\n');dl(k+'.csv',s,'text/csv')}
+function backup(){dl((d.settings.name||'business').replace(/\W+/g,'_')+'_backup.json',JSON.stringify(d,null,2),'application/json')}
+function dl(n,s,t){let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([s],{type:t}));a.download=n;a.click()}
+function restore(i){let f=i.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let z=JSON.parse(r.result);if(!z.settings||!z.orders)throw 0;d=z;save();alert('Backup restored successfully.');location.reload();}catch(e){alert('Invalid backup file.')}};r.readAsText(f)}
+function resetApp(){if(confirm('WARNING: Delete all app records in this browser?\n\nThis cannot be undone without a backup.')){d=structuredClone(D);save();location.reload();}}
+
+function theme(){
+  document.documentElement.classList.toggle('dark');
+  localStorage.setItem('soucoDark',document.documentElement.classList.contains('dark')?'1':'0')
+}
+if(localStorage.getItem('soucoDark')==='1' || (!('soucoDark' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+  document.documentElement.classList.add('dark');
+}
+
+let db;let rq=indexedDB.open('SoucoDocs',1);
+rq.onupgradeneeded=x=>x.target.result.createObjectStore('files',{keyPath:'id'});
+rq.onsuccess=x=>{db=x.target.result;docsRender()}
+
+function documentForm(){form('Upload Document',`<div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label class="${UI.label}">Document Title</label><input class="${UI.input}" name="title" required></div><div><label class="${UI.label}">Category</label><select class="${UI.select}" name="category"><option>SSM</option><option>Food Handler Training</option><option>Vaccination</option><option>MyIPO</option><option>Tax</option><option>Supplier</option><option>Receipt</option><option>Equipment</option><option>University Permission</option><option>Brand Evidence</option><option>Other</option></select></div><div><label class="${UI.label}">Issue Date</label><input class="${UI.input}" name="issue" type="date"></div><div><label class="${UI.label}">Expiry Date</label><input class="${UI.input}" name="expiry" type="date"></div><div class="md:col-span-2"><label class="${UI.label}">File (PDF/JPG/PNG)</label><div class="relative border-2 border-dashed border-gray-300 dark:border-zinc-700 rounded-xl p-6 text-center hover:bg-gray-50 dark:hover:bg-zinc-800/50 transition-colors"><input class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" name="file" type="file" accept=".pdf,.jpg,.jpeg,.png" required><div class="text-sm text-gray-500 font-medium"><i class="ph ph-upload-simple text-2xl mb-2 block"></i>Click to select file</div></div></div></div>`,f=>{let file=f.get('file'),i=id();d.docsMeta.push({id:i,title:f.get('title'),category:f.get('category'),issue:f.get('issue'),expiry:f.get('expiry'),filename:file.name});if(db)db.transaction('files','readwrite').objectStore('files').put({id:i,file})})}
+
+function docsRender(){if(!$('#dt'))return;$('#dt').innerHTML=(d.docsMeta||[]).map(x=>`<tr><td class="${UI.td} font-medium">${e(x.title)}</td><td class="${UI.td}">${e(x.category)}</td><td class="${UI.td}">${x.issue||'-'}</td><td class="${UI.td}">${x.expiry||'-'}</td><td class="${UI.td}"><button class="px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700 text-xs font-semibold flex items-center gap-1 transition-colors" onclick="getDoc(${x.id})"><i class="ph ph-file"></i> ${e(x.filename)}</button></td><td class="${UI.td} text-right"><button class="${UI.btnDel}" onclick="delDoc(${x.id})">Delete</button></td></tr>`).join('')||empty(6)}
+
+function getDoc(i){if(!db)return;let r=db.transaction('files').objectStore('files').get(i);r.onsuccess=()=>{if(!r.result)return alert('File unavailable in this browser.');let u=URL.createObjectURL(r.result.file),a=document.createElement('a');a.href=u;a.download=r.result.file.name;a.click()}}
+function delDoc(i){if(confirm('Delete document?')){d.docsMeta=d.docsMeta.filter(x=>x.id!==i);if(db)db.transaction('files','readwrite').objectStore('files').delete(i);save()}}
+
+// Initialization
+setup();
+render();
+setTimeout(syncOrdersFromGoogleSheets, 500);
+
+</script>
+</body>
+</html>

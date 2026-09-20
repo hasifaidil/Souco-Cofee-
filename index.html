@@ -103,6 +103,43 @@ dialog{border:0;border-radius:17px;padding:0;background:var(--card);color:var(--
   .grid,.analytics-grid{grid-template-columns:1fr}
 }
 
+
+/* SOUCO V5 RESPONSIVE REDESIGN */
+:root{--bg:#f6f4ef;--card:#fff;--tx:#171713;--mu:#77746c;--bd:#e7e2d8;--a:#f5b52f;--ad:#d99608;--soft:#fff7e4;--shadow:0 10px 35px rgba(28,24,17,.07)}
+body{background:var(--bg)}.app{grid-template-columns:250px minmax(0,1fr)}
+aside{background:#151513;color:#fff;padding:24px 16px;border:0;box-shadow:8px 0 30px rgba(0,0,0,.05)}
+.brand{padding:0 8px 24px;border-bottom:1px solid #2b2a27;margin-bottom:16px}.brand small{color:#aaa69e}
+.brand .logo{width:44px;height:44px;border-radius:14px;background:var(--a);color:#171713;display:grid;place-items:center;font-weight:900}
+nav{display:grid;gap:5px}nav button{position:relative;border-radius:12px;padding:11px 12px;color:#aaa69e;font-weight:650;transition:.18s}
+nav button:hover{background:#23221f;color:#fff;transform:translateX(2px)}nav button.on{background:#2a2823;color:#fff}
+nav button.on:before{content:"";position:absolute;left:0;top:10px;bottom:10px;width:3px;border-radius:99px;background:var(--a)}
+main{max-width:1500px;width:100%;padding:30px clamp(20px,3vw,46px) 50px}.top{margin-bottom:24px}.top h1{font-size:clamp(26px,3vw,36px);letter-spacing:-1.2px}
+.card{border:1px solid var(--bd);border-radius:18px;padding:19px;box-shadow:var(--shadow);background:#fff}
+.metric{min-height:112px;display:flex;flex-direction:column;justify-content:center}.metric small{text-transform:uppercase;letter-spacing:.65px;font-size:10px;font-weight:800}.metric strong{font-size:clamp(23px,2.2vw,31px);letter-spacing:-.8px;margin-top:5px}
+.grid,.analytics-grid,.two{gap:12px}.section{margin-top:12px}.btn{border-radius:11px;padding:10px 14px;font-weight:750;transition:.15s}.btn:hover{transform:translateY(-1px);box-shadow:0 7px 20px rgba(0,0,0,.07)}
+.btn.pri{background:#171713;color:#fff;border-color:#171713}.btn.sec{background:#fff}input,select,textarea{border-radius:11px;background:#fff;padding:11px 12px}
+.dashboard-controls{background:#ebe7de;border:1px solid #dfd9cd;border-radius:14px;padding:8px;display:flex;align-items:center;margin-bottom:12px}.dashboard-controls select{background:#fff;border:0}#syncState{margin-left:auto}
+.wrap{border-radius:12px;border:1px solid var(--bd)}thead{background:#f4f1eb}tbody tr:hover{background:#fffbf2}.bar{height:9px}.fill{background:linear-gradient(90deg,var(--a),#ffd36e)}
+dialog{border:0;border-radius:20px;box-shadow:0 30px 90px rgba(0,0,0,.22)}dialog::backdrop{background:rgba(20,18,14,.48);backdrop-filter:blur(4px)}
+.mobile-more,.mobile-menu{display:none}
+@media(max-width:1050px) and (min-width:721px){.app{grid-template-columns:205px minmax(0,1fr)}aside{padding:20px 10px}main{padding:24px 20px 40px}.grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:720px){
+ body{overflow-x:hidden}.app{display:block;padding-bottom:calc(83px + env(safe-area-inset-bottom))}
+ aside{position:fixed;z-index:100;left:0;right:0;bottom:0;top:auto;height:auto;padding:7px 8px calc(7px + env(safe-area-inset-bottom));background:rgba(20,20,18,.97);border-top:1px solid rgba(255,255,255,.08);box-shadow:0 -10px 35px rgba(0,0,0,.16);backdrop-filter:blur(18px)}
+ aside .brand{display:none}nav{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;overflow:visible}
+ nav button{min-width:0;width:100%;height:55px;padding:6px 2px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:9px;line-height:1.15;color:#aaa69e;border-radius:12px;white-space:normal;overflow:hidden}
+ nav button:hover{transform:none}nav button.on{background:#302d27;color:#fff}nav button.on:before{left:50%;top:3px;bottom:auto;width:18px;height:3px;transform:translateX(-50%)}nav button:nth-child(n+6){display:none}
+ main{padding:18px 13px 24px;max-width:none}.top{display:flex;align-items:flex-start;margin-bottom:17px}.top h1{font-size:25px;line-height:1.05}.top p{font-size:11px;max-width:230px}.top .flex{margin-left:auto;display:grid;gap:5px}.top .btn{font-size:10px;padding:8px 9px;white-space:nowrap}
+ .dashboard-controls{position:relative;display:grid;grid-template-columns:1fr auto;gap:7px;padding:7px}.dashboard-controls select{width:100%;min-width:0;font-size:14px}.dashboard-controls .btn{width:auto;font-size:11px;padding:9px 10px}#syncState,#periodLabel{grid-column:1/-1;margin:0;font-size:10px;padding:0 3px}
+ .grid,.analytics-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.card{padding:13px;border-radius:15px;box-shadow:0 6px 22px rgba(28,24,17,.05)}.metric{min-height:91px}.metric strong{font-size:19px}.metric small{font-size:9px}.two{grid-template-columns:1fr;gap:8px}.section{margin-top:8px}.card h2{font-size:15px}
+ .chartbox{height:205px}.donut{width:112px;height:112px}.donut:after{inset:21px}.legend div{font-size:11px}
+ .toolbar{display:grid;grid-template-columns:1fr;gap:8px}.toolbar .btn{width:100%}.wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}table{min-width:620px;font-size:11px}th,td{padding:9px 7px}
+ dialog{width:calc(100vw - 18px);max-height:88dvh}.modal{padding:16px}.fg{grid-template-columns:1fr}.full{grid-column:auto}input,select,textarea{font-size:16px}.actions{position:sticky;bottom:-16px;background:var(--card);padding:12px 0 4px}.actions .btn{flex:1}
+ .mobile-more{display:flex;position:fixed;z-index:110;right:12px;bottom:calc(73px + env(safe-area-inset-bottom));width:43px;height:43px;border-radius:50%;border:1px solid #ded7ca;background:#fff;color:#171713;align-items:center;justify-content:center;box-shadow:0 8px 25px rgba(0,0,0,.16);font-size:20px;font-weight:900}
+ .mobile-menu{position:fixed;z-index:109;left:12px;right:12px;bottom:calc(126px + env(safe-area-inset-bottom));background:#fff;border:1px solid var(--bd);border-radius:18px;padding:10px;box-shadow:0 25px 70px rgba(0,0,0,.22)}
+ .mobile-menu.open{display:grid;grid-template-columns:1fr 1fr;gap:7px}.mobile-menu button{border:1px solid var(--bd);background:#faf9f6;border-radius:12px;padding:12px 9px;text-align:left;font-weight:700;font-size:12px}
+}
+
 </style>
 </head><body>
 <div class="app"><aside><div class="brand"><div class="logo" id="li">S</div><div><b id="bn">Souco Coffee</b><small>Business Manager</small></div></div><nav id="nav"></nav></aside>
@@ -315,5 +352,9 @@ let db;let rq=indexedDB.open('SoucoDocs',1);rq.onupgradeneeded=x=>x.target.resul
 function documentForm(){form('Add Document',`<div class=fg><div><label>Title</label><input name=title required></div><div><label>Category</label><select name=category><option>SSM</option><option>Food Handler Training</option><option>Vaccination</option><option>MyIPO</option><option>Tax</option><option>Supplier</option><option>Receipt</option><option>Equipment</option><option>University Permission</option><option>Brand Evidence</option><option>Other</option></select></div><div><label>Issue Date</label><input name=issue type=date></div><div><label>Expiry</label><input name=expiry type=date></div><div class=full><label>PDF/JPG/PNG</label><input name=file type=file accept=".pdf,.jpg,.jpeg,.png" required></div></div>`,f=>{let file=f.get('file'),i=id();d.docsMeta.push({id:i,title:f.get('title'),category:f.get('category'),issue:f.get('issue'),expiry:f.get('expiry'),filename:file.name});if(db)db.transaction('files','readwrite').objectStore('files').put({id:i,file})})}
 function docsRender(){if(!$('#dt'))return;$('#dt').innerHTML=(d.docsMeta||[]).map(x=>`<tr><td>${e(x.title)}</td><td>${e(x.category)}</td><td>${x.issue||'-'}</td><td>${x.expiry||'-'}</td><td><button class="btn sec" onclick="getDoc(${x.id})">${e(x.filename)}</button></td><td><button class="btn del" onclick="delDoc(${x.id})">Delete</button></td></tr>`).join('')||empty(6)}
 function getDoc(i){if(!db)return;let r=db.transaction('files').objectStore('files').get(i);r.onsuccess=()=>{if(!r.result)return alert('File unavailable in this browser.');let u=URL.createObjectURL(r.result.file),a=document.createElement('a');a.href=u;a.download=r.result.file.name;a.click()}}function delDoc(i){if(confirm('Delete document?')){d.docsMeta=d.docsMeta.filter(x=>x.id!==i);if(db)db.transaction('files','readwrite').objectStore('files').delete(i);save()}}
+function toggleMobileMenu(){document.getElementById('mobileMenu')?.classList.toggle('open')}
+function mobileGo(id){document.getElementById('mobileMenu')?.classList.remove('open');go(id)}
+document.addEventListener('click',ev=>{let x=document.getElementById('mobileMenu'),b=document.querySelector('.mobile-more');if(x?.classList.contains('open')&&!x.contains(ev.target)&&!b?.contains(ev.target))x.classList.remove('open')});
+
 setup();render();setTimeout(syncOrdersFromGoogleSheets,500);
 </script></body></html>
